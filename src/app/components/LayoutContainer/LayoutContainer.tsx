@@ -11,6 +11,8 @@ const LayoutContainer = ({
   image: any;
   classes?: { root: string };
 }) => {
+  console.log(image);
+
   return (
     <div
       className={classNames(

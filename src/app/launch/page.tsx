@@ -950,7 +950,7 @@ export default function Launch() {
 
   return (
     <LayoutContainer
-      image={background}
+      image={background.src}
       classes={{ root: "text-white overflow-hidden" }}
     >
       <Container classes={{ container: "mb-20" }}>

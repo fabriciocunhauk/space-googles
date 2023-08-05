@@ -86,7 +86,7 @@ export default function Crew() {
   }, []);
 
   return (
-    <LayoutContainer image={background} classes={{ root: "text-white" }}>
+    <LayoutContainer image={background.src} classes={{ root: "text-white" }}>
       <Container
         classes={{
           container: "p-5 w-screen",

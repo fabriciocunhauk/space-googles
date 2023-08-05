@@ -16,11 +16,12 @@ export default function DestinationIndex() {
   const [planetId, setPlanetId] = useState(1);
   const [planet, setPlanet] = useState({ gravity: 1, vol: { volValue: 1 } });
   const { width } = useWindowDimensions();
+  const sm = 640;
 
   useEffect(() => {
     async () => {
       const data = await fetch(
-        `https://api.le-systeme-solaire.net/rest/bodies/${"moon"}}`
+        `https://api.le-systeme-solaire.net/rest/bodies/moon}`
       )
         .then((res) => res.json())
         .then((data) => data);
@@ -68,8 +69,6 @@ export default function DestinationIndex() {
     },
   ];
 
-  const sm = 640;
-
   const handleSelection = (planetId: number) => {
     setPlanetId(planetId);
   };
@@ -80,7 +79,7 @@ export default function DestinationIndex() {
 
   return (
     <LayoutContainer
-      image={width > sm ? backgroundDesktop : backgroundMobile}
+      image={width > sm ? backgroundDesktop.src : backgroundMobile.src}
       classes={{ root: "text-white w-screen" }}
     >
       <Container>
@@ -88,7 +87,7 @@ export default function DestinationIndex() {
           <h1 className="text-[20px] font-light font-Barlow md:place-self-start md:pl-10 lg:pl-28 lg:text-[28px]">
             01 PICK YOUR DESTINATION
           </h1>
-          {[].map((planet: { image: string; id: number; name: string }) => {
+          {planetsData.map((planet) => {
             if (planet.id === planetId) {
               return (
                 <Image
