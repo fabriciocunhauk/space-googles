@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import HomeLogo from "../Logo/HomeLogo/HomeLogo";
-import NavbarBurger from "../Logo/NavbarBurger/NavbarBurger";
+import HomeLogo from "../Svgs/HomeLogo/HomeLogo";
+import NavbarBurger from "../Svgs/NavbarBurger/NavbarBurger";
 import { useWindowDimensions } from "@/app/hooks/useDimension";
 
 export const Navbar = () => {
@@ -32,7 +32,7 @@ export const Navbar = () => {
             <Link href="/">00 HOME</Link>
           </li>
           <li className="border-primary hover:border-b-2 h-10 cursor:pointer">
-            <Link href="/destination">01 DESTINATION</Link>
+            <Link href="/destination?search=Mercury">01 DESTINATION</Link>
           </li>
           <li className="border-primary hover:border-b-2 h-10 cursor:pointer">
             <Link href="/crew">02 CREW</Link>
