@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import background from "../../../public/assets/launch/background-technology-desktop.jpg";
-import Container from "../components/Container/Container";
-import LayoutContainer from "../components/LayoutContainer/LayoutContainer";
-import Card from "../components/Card/Card";
+import background from "/public/assets/launch/background-technology-desktop.jpg";
+import LayoutContainer from "@/app/components/LayoutContainer";
+import Container from "@/app/components/Container";
+import Card from "@/app/components/Card";
 
 // type LoaderProps = {
 //   name: string;
@@ -949,11 +949,11 @@ export default function Launch() {
   ];
 
   return (
-    <LayoutContainer
-      image={background.src}
-      classes={{ root: "text-white overflow-hidden" }}
+    <section
+      className="flex justify-center h-full w-full pt-60"
+      style={{ backgroundImage: `url(${background.src})` }}
     >
-      <Container classes={{ container: "mb-20" }}>
+      <Container className="flex justify-between text-white w-full">
         <div className="flex flex-col items-center">
           <div>
             <h1 className="text-[20px] font-light lg:text-[28px]">
@@ -963,7 +963,7 @@ export default function Launch() {
               MISSION
             </h2>
           </div>
-          <div className="flex flex-col gap-4 h-screen overflow-scroll p-4">
+          <div className="flex flex-col gap-4 h-5/6 overflow-scroll p-4">
             {upcomingLaunches.map(
               ({ name, rocket, pad, last_updated }, index: number) => {
                 return (
@@ -989,10 +989,10 @@ export default function Launch() {
             DETAILS
           </h1>
           {upcomingLaunches.map(({ mission }, index) => {
-            return card === index && <p>{mission?.description}</p>;
+            return card === index && <p key={index}>{mission?.description}</p>;
           })}
         </div>
       </Container>
-    </LayoutContainer>
+    </section>
   );
 }

@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-import background from "../../../public/assets/crew/background-crew-desktop.jpg";
-import Container from "../components/Container/Container";
-import SimpleMap from "../components/GoogleMap/GoogleMap";
-import LayoutContainer from "../components/LayoutContainer/LayoutContainer";
-import Card from "../components/Card/Card";
+import background from "/public/assets/crew/background-crew-desktop.jpg";
+import LayoutContainer from "@/app/components/LayoutContainer";
+import Container from "@/app/components/Container";
+import Card from "@/app/components/Card";
+import SimpleMap from "@/app/components/GoogleMap";
 
 // const crewData = [
 //   {

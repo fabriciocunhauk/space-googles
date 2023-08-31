@@ -1,6 +1,6 @@
 import { classNames } from "@/app/utils/tilwind-jit-set";
 import type { ReactNode } from "react";
-import { Navbar } from "../NavBar/NavBar";
+import { Navbar } from "./NavBar";
 
 const LayoutContainer = ({
   children,
@@ -19,7 +19,6 @@ const LayoutContainer = ({
       )}
       style={{ backgroundImage: `url(${image})` }}
     >
-      <Navbar />
       {children}
     </div>
   );
