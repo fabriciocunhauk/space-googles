@@ -988,7 +988,13 @@ export default function Launch() {
             DETAILS
           </h1>
           {upcomingLaunches.map(({ mission }, index) => {
-            return card === index && <p key={index}>{mission?.description}</p>;
+            return (
+              card === index && (
+                <p className="text-center" key={index}>
+                  {mission?.description}
+                </p>
+              )
+            );
           })}
         </div>
       </Container>

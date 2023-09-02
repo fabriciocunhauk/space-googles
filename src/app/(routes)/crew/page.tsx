@@ -1,5 +1,4 @@
 import background from "/public/assets/crew/background-crew-desktop.jpg";
-import LayoutContainer from "@/app/components/LayoutContainer";
 import Container from "@/app/components/Container";
 import Card from "@/app/components/Card";
 
@@ -75,21 +74,31 @@ export default async function Crew() {
     await getData();
 
   return (
-    <LayoutContainer
-      image={background.src}
-      classes={{ root: "text-white pt-40" }}
+    <section
+      style={{
+        backgroundImage: `url(${background.src})`,
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+      }}
+      className="text-white"
     >
-      <Container className="flex justify-between p-5 w-screen" size="md">
+      <Container
+        className="flex justify-between p-5 w-full overflow-hidden  pt-40"
+        size="md"
+      >
         <div className="flex flex-col gap-4 w-96">
           <h1 className="text-[20px] font-light text-center lg:text-[28px]">
             02 MEET YOUR CREW
           </h1>
-          <div className="flex flex-col gap-4 overflow-y-scroll h-2/3">
+          <div className="flex flex-col gap-4 overflow-y-scroll p-5 h-2/3">
             {people.map(({ craft, name }) => {
               return (
                 <Card
                   key={name}
-                  classes={{ card: "py-4 bg-opacity-20 text-white" }}
+                  classes={{
+                    card: "cursor-pointer bg-opacity-20 hover:bg-opacity-100 text-white hover:text-black hover:scale-105 transition-all duration-300 px-4",
+                  }}
                 >
                   <p>CRAFT: {craft}</p>
                   <p>CREW MEMBER: {name}</p>
@@ -106,6 +115,6 @@ export default async function Crew() {
           <span className="text-[250px]">{numberOfPeopleInSpace}</span>
         </div>
       </Container>
-    </LayoutContainer>
+    </section>
   );
 }

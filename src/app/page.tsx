@@ -1,3 +1,4 @@
+import Button from "./components/Button";
 import Container from "./components/Container";
 
 const NASA_KEY = process.env.NEXT_PUBLIC_NASA_API_KEY;
@@ -38,11 +39,7 @@ export default async function Home() {
             world experience!
           </p>
         </div>
-        <div className="w-96 h-96 mt-20 bg-primary flex items-center justify-center rounded-full hover:w-flex  hover:bg-opacity-5  bg-opacity-0 ease-in-out duration-500">
-          <button className="bg-primary w-64 h-64 rounded-full flex items-center justify-center">
-            <p className="text-3xl font-Bellefair">EXPLORE</p>
-          </button>
-        </div>
+        <Button href="/destination">EXPLORE</Button>
       </Container>
     </main>
   );

@@ -1,23 +1,14 @@
 "use client";
-import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { classNames } from "../utils/tilwind-jit-set";
 import HomeLogo from "./Svgs/HomeLogo/HomeLogo";
 import NavbarBurger from "./Svgs/NavbarBurger/NavbarBurger";
-import { useWindowDimensions } from "@/app/hooks/useDimension";
 import Container from "./Container";
+import { navigation } from "../utils/navbar.utils";
 
 export const Navbar = () => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  const { width } = useWindowDimensions();
-
-  useEffect(() => {
-    if (width > 507) {
-      setIsMobile(true);
-    } else {
-      setIsMobile(false);
-    }
-  }, [width]);
+  const pathname = usePathname();
 
   return (
     <nav className="absolute pt-10 w-full">
@@ -25,26 +16,26 @@ export const Navbar = () => {
         <Link href="/" className="flex items-center">
           <HomeLogo />
         </Link>
-        {isMobile ? (
-          <ul className="flex items-center justify-around text-white pt-4 bg-white bg-opacity-5 gap-10 h-[100px] px-4">
-            <li className="border-primary hover:border-b-2 h-10 cursor:pointer">
-              <Link href="/">00 HOME</Link>
-            </li>
-            <li className="border-primary hover:border-b-2 h-10 cursor:pointer">
-              <Link href="/destination">01 DESTINATION</Link>
-            </li>
-            <li className="border-primary hover:border-b-2 h-10 cursor:pointer">
-              <Link href="/crew">02 CREW</Link>
-            </li>
-            <li className="border-primary hover:border-b-2 h-10 cursor:pointer">
-              <Link href="/launch">03 LAUNCH</Link>
-            </li>
-          </ul>
-        ) : (
-          <div className="flex items-center justify-center cursor-pointer">
-            <NavbarBurger />
-          </div>
-        )}
+        {/* Desktop */}
+        <ul className="hidden sm:flex items-center justify-around text-white pt-4 bg-white bg-opacity-5 gap-10 h-[100px] px-4">
+          {navigation.map(({ id, name, href }) => {
+            return (
+              <li
+                key={id}
+                className={classNames(
+                  " h-10 cursor:pointer",
+                  href === pathname ? "border-primary border-b-2" : ""
+                )}
+              >
+                <Link href={href}>{name}</Link>
+              </li>
+            );
+          })}
+        </ul>
+        {/* Mobile */}
+        <div className="flex sm:hidden items-center justify-center cursor-pointer">
+          <NavbarBurger />
+        </div>
       </Container>
     </nav>
   );

@@ -7,6 +7,8 @@ import { useWindowDimensions } from "@/app/hooks/useDimension";
 import backgroundMobile from "/public/assets/destination/background-destination-mobile.jpg";
 import backgroundDesktop from "/public/assets/destination/background-destination-desktop.jpg";
 
+const apiKey = process.env.NEXT_PUBLIC_RAPID_API_KEY;
+
 type PlanesData = {
   planetOrder: number;
   name: string;
@@ -31,7 +33,7 @@ export default function DestinationIndex() {
         {
           method: "GET",
           headers: {
-            "X-RapidAPI-Key": `${process.env.NEXT_PUBLIC_RAPID_API_KEY}`,
+            "X-RapidAPI-Key": `${apiKey}`,
             "X-RapidAPI-Host": "planets-info-by-newbapi.p.rapidapi.com",
           },
         }
@@ -75,6 +77,7 @@ export default function DestinationIndex() {
               );
             })}
           </ul>
+
           {planetsData.map(
             ({ planetOrder: id, name, description, imgSrc }) =>
               planetId === id && (
