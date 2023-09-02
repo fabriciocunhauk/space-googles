@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import background from "/public/assets/launch/background-technology-desktop.jpg";
-import LayoutContainer from "@/app/components/LayoutContainer";
 import Container from "@/app/components/Container";
 import Card from "@/app/components/Card";
 
@@ -970,7 +969,7 @@ export default function Launch() {
                   <Card
                     key={index}
                     classes={{
-                      card: "cursor-pointer opacity-50 hover:opacity-100 hover:scale-105 transition-all duration-300",
+                      card: "cursor-pointer bg-opacity-20 hover:bg-opacity-100 text-white hover:text-black hover:scale-105 transition-all duration-300",
                     }}
                     onClick={() => setCard(index)}
                   >

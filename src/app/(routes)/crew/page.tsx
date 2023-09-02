@@ -1,10 +1,7 @@
-"use client";
-import { useEffect, useState } from "react";
 import background from "/public/assets/crew/background-crew-desktop.jpg";
 import LayoutContainer from "@/app/components/LayoutContainer";
 import Container from "@/app/components/Container";
 import Card from "@/app/components/Card";
-import SimpleMap from "@/app/components/GoogleMap";
 
 // const crewData = [
 //   {
@@ -37,83 +34,78 @@ import SimpleMap from "@/app/components/GoogleMap";
 //   },
 // ];
 type PeopleProps = {
-  craft: string;
-  name: string;
-}[];
-
-type LoaderProps = {
-  numberOfPeople: number;
-  people: PeopleProps;
-  longitude: string;
-  latitude: string;
+  number: number;
+  people: { craft: string; name: string }[];
 };
 
-export default function Crew() {
-  const [fetchData, setFetchData] = useState({
-    longitude: 0,
-    latitude: 1,
-    numberOfPeople: 1,
-    people: [],
-  });
+type ISSPositionProps = {
+  iss_position: { longitude: string; latitude: string };
+};
 
-  const { longitude, latitude, numberOfPeople, people } = fetchData;
+const getData = async () => {
+  const dataNumberOfPeopleInSpace: PeopleProps = await fetch(
+    "http://api.open-notify.org/astros.json"
+  )
+    .then((response) => response.json())
+    .then((data) => data);
 
-  useEffect(() => {
-    async () => {
-      const dataNumberOfPeopleInSpace = await fetch(
-        "http://api.open-notify.org/astros.json"
-      ).then((response) => response.json());
-      const dataISScurrentLocation = await fetch(
-        "http://api.open-notify.org/iss-now.json"
-      )
-        .then((response) => response.json())
-        .then((data) => data);
+  const dataISScurrentLocation: ISSPositionProps = await fetch(
+    "http://api.open-notify.org/iss-now.json"
+  )
+    .then((response) => response.json())
+    .then((data) => data);
 
-      const { iss_position: ISScurrentLocation } = dataISScurrentLocation;
+  const { iss_position: ISScurrentLocation } = dataISScurrentLocation;
 
-      const { longitude, latitude } = ISScurrentLocation;
+  const { longitude, latitude } = ISScurrentLocation;
 
-      const numberOfPeople = dataNumberOfPeopleInSpace.number;
-      const people = dataISScurrentLocation.people;
+  const numberOfPeopleInSpace = dataNumberOfPeopleInSpace.number;
+  const people = dataNumberOfPeopleInSpace.people;
 
-      setFetchData({
-        longitude,
-        latitude,
-        numberOfPeople,
-        people,
-      });
-    };
-  }, []);
+  return {
+    longitude,
+    latitude,
+    numberOfPeopleInSpace,
+    people,
+  };
+};
+
+export default async function Crew() {
+  const { longitude, latitude, numberOfPeopleInSpace, people } =
+    await getData();
 
   return (
-    <LayoutContainer image={background.src} classes={{ root: "text-white" }}>
-      <Container
-        classes={{
-          container: "p-5 w-screen",
-        }}
-      >
+    <LayoutContainer
+      image={background.src}
+      classes={{ root: "text-white pt-40" }}
+    >
+      <Container className="flex justify-between p-5 w-screen" size="md">
+        <div className="flex flex-col gap-4 w-96">
+          <h1 className="text-[20px] font-light text-center lg:text-[28px]">
+            02 MEET YOUR CREW
+          </h1>
+          <div className="flex flex-col gap-4 overflow-y-scroll h-2/3">
+            {people.map(({ craft, name }) => {
+              return (
+                <Card
+                  key={name}
+                  classes={{ card: "py-4 bg-opacity-20 text-white" }}
+                >
+                  <p>CRAFT: {craft}</p>
+                  <p>CREW MEMBER: {name}</p>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
         <div className="flex flex-col items-center">
           <h1 className="text-[20px] font-light lg:text-[28px]">
             NUMBER OF PEOPLE IN SPACE
           </h1>
 
-          <span className="text-[250px]">{numberOfPeople}</span>
-        </div>
-        <div className="flex flex-col gap-4">
-          <h1 className="text-[20px] font-light text-center lg:text-[28px]">
-            02 MEET YOUR CREW
-          </h1>
-          {people.map(({ craft, name }, index) => {
-            return (
-              <Card key={index} classes={{ card: "py-2" }}>
-                <p>CRAFT: {craft}</p>
-                <p>CREW MEMBER: {name}</p>
-              </Card>
-            );
-          })}
+          <span className="text-[250px]">{numberOfPeopleInSpace}</span>
         </div>
       </Container>
-      <SimpleMap longitude={Number(longitude)} latitude={Number(latitude)} />
     </LayoutContainer>
   );
 }

@@ -1,32 +1,29 @@
-"use client";
-import { useEffect, useState } from "react";
-import LayoutContainer from "./components/LayoutContainer";
 import Container from "./components/Container";
 
 const NASA_KEY = process.env.NEXT_PUBLIC_NASA_API_KEY;
 
-export default function Home() {
-  const [imageOfTheDay, setImageOfTheDay] = useState("");
+const getImageOfTheDay = async () => {
+  const imageOfTheDay = await fetch(
+    `https://api.nasa.gov/planetary/apod?api_key=${NASA_KEY}`
+  )
+    .then((response) => response.json())
+    .then((data) => data.url);
 
-  useEffect(() => {
-    async function fetchMyAPI() {
-      const image = await fetch(
-        `https://api.nasa.gov/planetary/apod?api_key=${NASA_KEY}`
-      )
-        .then((response) => response.json())
-        .then((data) => data.url);
+  return imageOfTheDay;
+};
 
-      console.log(image);
-
-      setImageOfTheDay(image);
-    }
-    fetchMyAPI();
-  }, []);
+export default async function Home() {
+  const imageOfTheDay = await getImageOfTheDay();
 
   return (
     <main
       className="h-full"
-      style={{ backgroundImage: `url(${imageOfTheDay})` }}
+      style={{
+        backgroundImage: `url(${imageOfTheDay})`,
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+      }}
     >
       <Container className="flex flex-wrap items-center justify-around w-full h-full">
         <div className="text-primary">

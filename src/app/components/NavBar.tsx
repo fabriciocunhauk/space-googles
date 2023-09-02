@@ -20,7 +20,7 @@ export const Navbar = () => {
   }, [width]);
 
   return (
-    <nav className="absolute p-20 w-full">
+    <nav className="absolute pt-10 w-full">
       <Container className="flex justify-between">
         <Link href="/" className="flex items-center">
           <HomeLogo />
@@ -31,7 +31,7 @@ export const Navbar = () => {
               <Link href="/">00 HOME</Link>
             </li>
             <li className="border-primary hover:border-b-2 h-10 cursor:pointer">
-              <Link href="/destination?search=Mercury">01 DESTINATION</Link>
+              <Link href="/destination">01 DESTINATION</Link>
             </li>
             <li className="border-primary hover:border-b-2 h-10 cursor:pointer">
               <Link href="/crew">02 CREW</Link>
