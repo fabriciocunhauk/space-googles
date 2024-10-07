@@ -6,16 +6,21 @@ export const navigation = [
   },
   {
     id: 1,
+    name: "00 NEWS",
+    href: "/news",
+  },
+  {
+    id: 2,
     name: "01 DESTINATION",
     href: "/destination",
   },
   {
-    id: 2,
+    id: 3,
     name: "02 CREW",
     href: "/crew",
   },
   {
-    id: 3,
+    id: 4,
     name: "03 LAUNCH",
     href: "/launch",
   },
