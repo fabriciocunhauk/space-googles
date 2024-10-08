@@ -12,7 +12,7 @@ export const Navbar = () => {
 
   return (
     <nav className="absolute pt-10 w-full">
-      <Container className="flex justify-between">
+      <Container classes={{ container: "flex justify-between" }}>
         <Link href="/" className="flex items-center">
           <HomeLogo />
         </Link>

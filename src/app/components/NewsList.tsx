@@ -39,18 +39,30 @@ function NewsList() {
   // console.log(news);
 
   return (
-    <Container classes={{ container: "flex flex-col" }}>
+    <Container
+      classes={{ container: "flex flex-col gap-6 overflow-scroll pb-20" }}
+    >
       {news.map((news, index) => {
         const date = new Date(news.published_at).toLocaleString();
 
         return (
-          <div key={index} className="grid grid-cols-3">
-            <div className="col-span-2">
-              <h1>{news.title}</h1>
-              <p>{news.summary}</p>
+          <div key={index} className="grid grid-cols-3 gap-10">
+            <div className="col-span-1">
+              <Image
+                src={news.image_url}
+                className="w-full"
+                width={500}
+                height={300}
+                alt="image"
+              />
+            </div>
+            <div className="flex flex-col justify-between col-span-2">
+              <div className="space-y-4">
+                <h1 className="text-3xl">{news.title}</h1>
+                <p>{news.summary}</p>
+              </div>
               <span>{date}</span>
             </div>
-            <Image src={news.image_url} width={300} height={300} alt="image" />
           </div>
         );
       })}

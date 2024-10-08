@@ -26,7 +26,11 @@ export default async function Home() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <Container className="flex flex-wrap items-center justify-around w-full h-full">
+      <Container
+        classes={{
+          container: "flex flex-wrap items-center justify-around w-full h-full",
+        }}
+      >
         <div className="text-primary">
           <p className="text-secondary text-3xl font-Barlow-Condensed font-light leading-8">
             SO, YOU WANT TO TRAVEL TO

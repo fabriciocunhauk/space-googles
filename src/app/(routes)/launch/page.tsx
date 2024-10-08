@@ -966,7 +966,9 @@ export default function Launch() {
       className="flex justify-center h-full w-full pt-60"
       style={{ backgroundImage: `url(${background.src})` }}
     >
-      <Container className="flex justify-between text-white w-full">
+      <Container
+        classes={{ container: "flex justify-between text-white w-full" }}
+      >
         <div className="flex flex-col items-center">
           {/* <div>
             <h1 className="text-[20px] font-light lg:text-[28px]">

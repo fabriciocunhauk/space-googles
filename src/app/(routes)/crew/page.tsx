@@ -84,7 +84,9 @@ export default async function Crew() {
       className="text-white"
     >
       <Container
-        className="flex justify-between p-5 w-full overflow-hidden  pt-40"
+        classes={{
+          container: "flex justify-between p-5 w-full overflow-hidden  pt-40",
+        }}
         size="md"
       >
         <div className="flex flex-col gap-4 w-96">

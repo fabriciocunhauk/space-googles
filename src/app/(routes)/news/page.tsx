@@ -11,18 +11,9 @@ export default async function News() {
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
       }}
-      className="text-white h-screen"
+      className="flex justify-center text-white h-screen pt-52"
     >
-      <Container
-        classes={{
-          container: "flex justify-between p-5 w-full overflow-hidden  pt-40",
-        }}
-        size="md"
-      >
-        <div className="flex flex-col gap-4 w-96">
-          <NewsList />
-        </div>
-      </Container>
+      <NewsList />
     </section>
   );
 }
