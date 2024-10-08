@@ -1,5 +1,4 @@
 import background from "/public/assets/crew/background-crew-desktop.jpg";
-import Container from "@/app/components/Container";
 import NewsList from "@/app/components/NewsList";
 
 export default async function News() {

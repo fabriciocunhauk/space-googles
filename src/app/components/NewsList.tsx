@@ -36,8 +36,6 @@ function NewsList() {
     fetchNews();
   }, []);
 
-  // console.log(news);
-
   return (
     <Container
       classes={{ container: "flex flex-col gap-6 overflow-scroll pb-20" }}
