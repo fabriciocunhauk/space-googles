@@ -17,7 +17,7 @@ type PlanesData = {
   basicDetails: { volume: string; mass: string };
 }[];
 
-export default function DestinationIndex() {
+export default function Planets() {
   const [planetId, setPlanetId] = useState(1);
   const [planetsData, setPlanetsData] = useState<PlanesData>([]);
 

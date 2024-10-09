@@ -1,7 +1,4 @@
-const HomeLogo = () => {
-  return (
-    <>
-      <svg
+<svg
         width="48"
         height="48"
         viewBox="0 0 48 48"
@@ -16,8 +13,3 @@ const HomeLogo = () => {
           fill="#0B0D17"
         />
       </svg>
-    </>
-  );
-};
-
-export default HomeLogo;

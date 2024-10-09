@@ -43,7 +43,7 @@ export default async function Home() {
             world experience!
           </p>
         </div>
-        <Button href="/destination">EXPLORE</Button>
+        <Button href="/planets">EXPLORE</Button>
       </Container>
     </main>
   );

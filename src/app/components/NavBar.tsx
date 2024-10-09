@@ -1,11 +1,12 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
+import Container from "./Container";
+import HomeLogo from "../../../public/assets/logo.svg";
+import { navigation } from "../utils/navbar.utils";
+import { GiHamburgerMenu } from "react-icons/gi";
 import { usePathname } from "next/navigation";
 import { classNames } from "../utils/tilwind-jit-set";
-import HomeLogo from "./Svgs/HomeLogo/HomeLogo";
-import NavbarBurger from "./Svgs/NavbarBurger/NavbarBurger";
-import Container from "./Container";
-import { navigation } from "../utils/navbar.utils";
 
 export const Navbar = () => {
   const pathname = usePathname();
@@ -14,9 +15,8 @@ export const Navbar = () => {
     <nav className="absolute pt-10 w-full">
       <Container classes={{ container: "flex justify-between" }}>
         <Link href="/" className="flex items-center">
-          <HomeLogo />
+          <Image src={HomeLogo} className="w-full" alt="image" />
         </Link>
-        {/* Desktop */}
         <ul className="hidden sm:flex items-center justify-around text-white pt-4 bg-white bg-opacity-5 gap-10 h-[100px] px-4">
           {navigation.map(({ id, name, href }) => {
             return (
@@ -34,7 +34,7 @@ export const Navbar = () => {
         </ul>
         {/* Mobile */}
         <div className="flex sm:hidden items-center justify-center cursor-pointer">
-          <NavbarBurger />
+          <GiHamburgerMenu />
         </div>
       </Container>
     </nav>

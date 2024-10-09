@@ -11,8 +11,8 @@ export const navigation = [
   },
   {
     id: 2,
-    name: "01 DESTINATION",
-    href: "/destination",
+    name: "01 PLANETS",
+    href: "/planets",
   },
   {
     id: 3,

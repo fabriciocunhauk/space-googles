@@ -74,26 +74,33 @@ export default async function Crew() {
     await getData();
 
   return (
-    <section
+    <main
       style={{
         backgroundImage: `url(${background.src})`,
         backgroundPosition: "center",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
       }}
-      className="text-white"
+      className="text-white min-h-full"
     >
       <Container
         classes={{
-          container: "flex justify-between p-5 w-full overflow-hidden  pt-40",
+          container:
+            "flex justify-center md:justify-between flex-wrap p-5 w-full pt-48",
         }}
-        size="md"
       >
-        <div className="flex flex-col gap-4 w-96">
+        <div className="flex flex-col items-center">
+          <h1 className="text-[20px] font-light lg:text-[28px]">
+            NUMBER OF PEOPLE IN SPACE
+          </h1>
+
+          <span className="text-[250px]">{numberOfPeopleInSpace}</span>
+        </div>
+        <div className="flex flex-col gap-4 w-96 h-[700px] overflow-hidden">
           <h1 className="text-[20px] font-light text-center lg:text-[28px]">
             02 MEET YOUR CREW
           </h1>
-          <div className="flex flex-col gap-4 overflow-y-scroll p-5 h-2/3">
+          <div className="flex flex-col gap-4 overflow-y-scroll">
             {people.map(({ craft, name }) => {
               return (
                 <Card
@@ -109,14 +116,7 @@ export default async function Crew() {
             })}
           </div>
         </div>
-        <div className="flex flex-col items-center">
-          <h1 className="text-[20px] font-light lg:text-[28px]">
-            NUMBER OF PEOPLE IN SPACE
-          </h1>
-
-          <span className="text-[250px]">{numberOfPeopleInSpace}</span>
-        </div>
       </Container>
-    </section>
+    </main>
   );
 }
