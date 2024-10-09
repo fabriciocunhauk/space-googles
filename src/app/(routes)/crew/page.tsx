@@ -8,7 +8,7 @@ type PeopleProps = {
   people: { craft: string; name: string }[];
 };
 
-const getData = async () => {
+const getNumberOfPeopleInSpace = async () => {
   const dataNumberOfPeopleInSpace: PeopleProps = await fetch(
     "http://api.open-notify.org/astros.json"
   )
@@ -25,7 +25,7 @@ const getData = async () => {
 };
 
 export default async function Crew() {
-  const { numberOfPeopleInSpace, people } = await getData();
+  const { numberOfPeopleInSpace, people } = await getNumberOfPeopleInSpace();
 
   return (
     <main
@@ -40,21 +40,16 @@ export default async function Crew() {
       <Container
         classes={{
           container:
-            "flex justify-center md:justify-between flex-wrap p-5 w-full pt-48",
+            "grid grid-cols-1 md:grid-cols-3 gap-y-10 md:gap-10 w-full pt-48",
         }}
       >
-        <div className="flex flex-col items-center">
-          <h1 className="text-[20px] font-light lg:text-[28px]">
-            NUMBER OF PEOPLE IN SPACE
-          </h1>
+        <IssLocationMap />
 
-          <span className="text-[250px]">{numberOfPeopleInSpace}</span>
-        </div>
-        <div className="flex flex-col gap-4 w-96 h-[700px] overflow-hidden">
-          <h1 className="text-[20px] font-light text-center lg:text-[28px]">
-            02 MEET YOUR CREW
+        <div className="flex flex-col gap-4 h-[700px] overflow-hidden">
+          <h1 className="text-4xl font-light text-center md:text-left ">
+            {numberOfPeopleInSpace} PEOPLE IN SPACE
           </h1>
-          <div className="flex flex-col gap-4 overflow-y-scroll">
+          <div className="flex flex-col gap-4 overflow-y-scroll px-4">
             {people.map(({ craft, name }) => {
               return (
                 <Card
@@ -69,14 +64,6 @@ export default async function Crew() {
               );
             })}
           </div>
-        </div>
-
-        <div className="w-full space-y-6">
-          <h1 className="text-[20px] font-light lg:text-[28px]">
-            ISS LOCATION
-          </h1>
-
-          <IssLocationMap />
         </div>
       </Container>
     </main>

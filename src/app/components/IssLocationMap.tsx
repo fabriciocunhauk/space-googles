@@ -52,7 +52,7 @@ function IssLocationMap() {
 
   const containerStyle = {
     width: "100%",
-    height: "400px",
+    height: "650px",
   };
 
   const center = {
@@ -96,17 +96,24 @@ function IssLocationMap() {
     },
   };
 
-  return isLoaded ? (
-    <GoogleMap
-      mapContainerStyle={containerStyle}
-      center={center}
-      onLoad={handleMapLoad}
-      onUnmount={handleMapUnmount}
-    >
-      <Marker {...marker} />
-    </GoogleMap>
-  ) : (
-    <></>
+  return (
+    <div className="col-span-2 space-y-4">
+      <h1 className="text-4xl font-light  text-center md:text-left">
+        ISS REALTIME LOCATION
+      </h1>
+      {isLoaded ? (
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={center}
+          onLoad={handleMapLoad}
+          onUnmount={handleMapUnmount}
+        >
+          <Marker {...marker} />
+        </GoogleMap>
+      ) : (
+        <></>
+      )}
+    </div>
   );
 }
 
