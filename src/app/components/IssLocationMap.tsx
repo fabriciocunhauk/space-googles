@@ -22,7 +22,10 @@ declare global {
 const getIssLocation = async () => {
   const updateISSLocation = async () => {
     const dataISScurrentLocation: ISSPositionProps = await fetch(
-      "http://api.open-notify.org/iss-now.json"
+      "http://api.open-notify.org/iss-now.json",
+      {
+        mode: "cors",
+      }
     )
       .then((response) => response.json())
       .then((data) => data);
