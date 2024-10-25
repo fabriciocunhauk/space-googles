@@ -2,12 +2,9 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import issIcon from "../../../public/assets/International_Space_Station.svg";
+import { getIssLocation } from "../api/getIssLocation";
 
 const googleMapApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-
-type ISSPositionProps = {
-  iss_position: { longitude: number; latitude: number };
-};
 
 declare global {
   interface Window {
@@ -18,28 +15,6 @@ declare global {
     };
   }
 }
-
-const getIssLocation = async () => {
-  const updateISSLocation = async () => {
-    const dataISScurrentLocation: ISSPositionProps = await fetch(
-      "http://api.open-notify.org/iss-now.json",
-      {
-        mode: "cors",
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => data);
-
-    const { iss_position: ISScurrentLocation } = dataISScurrentLocation;
-
-    const longitude = Number(ISScurrentLocation.longitude);
-    const latitude = Number(ISScurrentLocation.latitude);
-
-    return { longitude, latitude };
-  };
-
-  return updateISSLocation();
-};
 
 function IssLocationMap() {
   const [location, setLocation] = useState({ longitude: 0, latitude: 0 });
