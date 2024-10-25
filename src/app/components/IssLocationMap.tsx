@@ -71,20 +71,6 @@ function IssLocationMap() {
     setMap(map);
     map.setZoom(2);
     map.setMapTypeId("roadmap");
-    // map.setOptions({
-    //   styles: [
-    //     { featureType: "all", elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
-    //     { featureType: "all", elementType: "labels.text.stroke", stylers: [{ color: "#1e1002" }] },
-    //     { featureType: "all", elementType: "labels.icon", stylers: [{ visibility: "off" }] },
-    //     { featureType: "administrative", elementType: "geometry.fill", stylers: [{ color: "#283d6b" }] },
-    //     { featureType: "administrative", elementType: "geometry.stroke", stylers: [{ color: "#1f4f24" }] },
-    //     { featureType: "landscape", elementType: "all", stylers: [{ color: "#3b5258" }] },
-    //     { featureType: "poi", elementType: "all", stylers: [{ visibility: "off" }] },
-    //     { featureType: "road", elementType: "all", stylers: [{ saturation: -70 }, { lightness: 40 }] },
-    //     { featureType: "transit", elementType: "all", stylers: [{ visibility: "off" }] },
-    //     { featureType: "water", elementType: "all", stylers: [{ color: "#0e1726" }] },
-    //   ],
-    // });
   }, []);
 
   const handleMapUnmount = useCallback(() => {
