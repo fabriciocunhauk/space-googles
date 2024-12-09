@@ -23,7 +23,7 @@ function IssLocationMap() {
     const interval = setInterval(async () => {
       const { longitude, latitude } = await getIssLocation();
       setLocation({ longitude, latitude });
-    }, 1000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
