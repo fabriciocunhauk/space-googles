@@ -1,27 +1,27 @@
 export const navigation = [
   {
     id: 0,
-    name: "00 HOME",
+    name: "HOME",
     href: "/",
   },
   {
     id: 1,
-    name: "00 NEWS",
+    name: "NEWS",
     href: "/news",
   },
   {
     id: 2,
-    name: "01 PLANETS",
+    name: "PLANETS",
     href: "/planets",
   },
   {
     id: 3,
-    name: "02 CREW",
+    name: "CREW",
     href: "/crew",
   },
   {
     id: 4,
-    name: "03 LAUNCH",
+    name: "LAUNCH",
     href: "/launch",
   },
 ];

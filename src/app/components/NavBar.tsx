@@ -33,7 +33,7 @@ export const Navbar = () => {
           })}
         </ul>
         {/* Mobile */}
-        <div className="flex sm:hidden items-center justify-center cursor-pointer">
+        <div className="flex sm:hidden items-center justify-center cursor-pointer text-3xl text-white hover:bg-white hover:bg-opacity-5 p-2">
           <GiHamburgerMenu />
         </div>
       </Container>
