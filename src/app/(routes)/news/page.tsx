@@ -1,7 +1,32 @@
+"use client";
+import { useEffect, useState } from "react";
+import Container from "@/app/components/Container";
 import background from "/public/assets/crew/background-crew-desktop.jpg";
-import NewsList from "@/app/components/NewsList";
+import Image from "next/image";
+import { fetchNews } from "@/app/api/fetchNews";
 
-export default async function News() {
+type NewsData = {
+  id: number;
+  image_url: string;
+  news_site: string;
+  published_at: string;
+  summary: string;
+  title: string;
+  updated_at: string;
+  url: string;
+};
+
+export default function News() {
+  const [news, setNews] = useState<NewsData[]>([]);
+
+  useEffect(() => {
+    const getNews = async () => {
+      const planetInfo = await fetchNews();
+      setNews(planetInfo);
+    };
+    getNews();
+  }, []);
+
   return (
     <section
       style={{
@@ -12,7 +37,34 @@ export default async function News() {
       }}
       className="flex justify-center text-white h-screen pt-52"
     >
-      <NewsList />
+      <Container
+        classes={{ container: "flex flex-col gap-6 overflow-scroll pb-20" }}
+      >
+        {news.map((news, index) => {
+          const date = new Date(news.published_at).toLocaleString();
+
+          return (
+            <div key={index} className="grid grid-cols-3 gap-10">
+              <div className="col-span-1 rounded overflow-hidden">
+                <Image
+                  src={news.image_url}
+                  className="w-full"
+                  width={500}
+                  height={300}
+                  alt="image"
+                />
+              </div>
+              <div className="flex flex-col justify-between col-span-2">
+                <div className="space-y-4">
+                  <h1 className="text-3xl">{news.title}</h1>
+                  <p>{news.summary}</p>
+                </div>
+                <span>{date}</span>
+              </div>
+            </div>
+          );
+        })}
+      </Container>
     </section>
   );
 }

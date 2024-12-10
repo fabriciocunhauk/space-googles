@@ -4,6 +4,7 @@ import background from "/public/assets/launch/background-technology-desktop.jpg"
 import Container from "@/app/components/Container";
 import Card from "@/app/components/Card";
 import VideoPlayer from "@/app/components/VideoPlayer";
+import { fetchLaunches } from "@/app/api/fetchLaunches";
 
 type Fairings = {
   reused?: boolean | null;
@@ -87,17 +88,13 @@ export default function Launch() {
   const [upcomingLaunches, setUpcomingLaunches] = useState<LaunchData[]>([]);
 
   useEffect(() => {
-    const fetchLaunches = async () => {
-      const response = await fetch(
-        "https://api.spacexdata.com/v5/launches/upcoming"
-      );
-      const data = await response.json();
-      setUpcomingLaunches(data);
-    };
-    fetchLaunches();
-  }, []);
+    const getLaunches = async () => {
+      const launchInfo = await fetchLaunches();
 
-  // console.log(upcomingLaunches);
+      setUpcomingLaunches(launchInfo);
+    };
+    getLaunches();
+  }, []);
 
   return (
     <section

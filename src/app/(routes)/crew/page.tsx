@@ -2,30 +2,10 @@ import background from "/public/assets/crew/background-crew-desktop.jpg";
 import Container from "@/app/components/Container";
 import Card from "@/app/components/Card";
 import IssLocationMap from "@/app/components/IssLocationMap";
-
-type PeopleProps = {
-  number: number;
-  people: { craft: string; name: string }[];
-};
-
-const getNumberOfPeopleInSpace = async () => {
-  const dataNumberOfPeopleInSpace: PeopleProps = await fetch(
-    "http://api.open-notify.org/astros.json"
-  )
-    .then((response) => response.json())
-    .then((data) => data);
-
-  const numberOfPeopleInSpace = dataNumberOfPeopleInSpace.number;
-  const people = dataNumberOfPeopleInSpace.people;
-
-  return {
-    numberOfPeopleInSpace,
-    people,
-  };
-};
+import { fetchNumberOfPeopleInSpace } from "@/app/api/fetchNumberOfPeopleInSpace";
 
 export default async function Crew() {
-  const { numberOfPeopleInSpace, people } = await getNumberOfPeopleInSpace();
+  const { numberOfPeopleInSpace, people } = await fetchNumberOfPeopleInSpace();
 
   return (
     <main
