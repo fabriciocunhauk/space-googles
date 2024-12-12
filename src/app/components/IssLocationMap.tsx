@@ -70,7 +70,7 @@ function IssLocationMap() {
   };
 
   return (
-    <div className="col-span-1 lg:col-span-2 space-y-4">
+    <div className="col-span-1 lg:col-span-2 space-y-4 z-10">
       <h1 className="text-4xl font-light  text-center md:text-left">
         ISS REALTIME LOCATION
       </h1>

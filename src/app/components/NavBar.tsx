@@ -29,7 +29,7 @@ export const Navbar = () => {
               <li
                 key={id}
                 className={classNames(
-                  "h-10 cursor-pointer",
+                  "h-10 cursor-pointer border-gray-300 hover:border-b-2",
                   href === pathname && "border-gray-300 border-b-2"
                 )}
               >
@@ -51,7 +51,7 @@ export const Navbar = () => {
 
       <div
         className={classNames(
-          "flex-col fixed top-0 right-0 bottom-0 left-0 bg-white w-screen py-16 px-6",
+          "flex-col fixed top-0 right-0 bottom-0 left-0 bg-white w-screen py-16 px-6 z-50",
           menuOpen ? "flex" : "hidden"
         )}
       >

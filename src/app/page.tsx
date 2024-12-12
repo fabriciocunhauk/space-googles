@@ -47,7 +47,7 @@ export default async function Home() {
           </p>
         </div>
 
-        <div className="bg-white hover:bg-opacity-5 bg-opacity-0 ease-in-out duration-500 p-10 rounded-full">
+        <div className="bg-white hover:bg-opacity-5 bg-opacity-0 ease-in-out duration-500 p-20 rounded-full">
           <Button href="/planets" classes={{ link: "text-3xl" }}>
             EXPLORE
           </Button>
