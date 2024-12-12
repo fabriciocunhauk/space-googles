@@ -115,13 +115,15 @@ export default function Planets() {
               {planetsData?.name}
             </h2>
 
-            <Image
-              className="mix-blend-lighten"
-              src={planetsData?.picture as string}
-              alt={planetsData?.name as string}
-              width={500}
-              height={500}
-            />
+            {planetsData?.picture && (
+              <Image
+                className="mix-blend-lighten"
+                src={planetsData?.picture}
+                alt={planetsData?.name}
+                width={500}
+                height={500}
+              />
+            )}
           </div>
         </div>
 

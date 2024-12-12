@@ -44,16 +44,15 @@ export default function News() {
           const date = new Date(news.published_at).toLocaleString();
 
           return (
-            <div key={index} className="grid grid-cols-3 gap-10">
-              <div className="col-span-1 rounded overflow-hidden">
-                <Image
-                  src={news.image_url}
-                  className="w-full"
-                  width={500}
-                  height={300}
-                  alt="image"
-                />
-              </div>
+            <div key={index} className="flex flex-col lg:flex-row gap-10">
+              <Image
+                src={news.image_url}
+                className="object-cover w-full h-[400px] lg:max-h-[300px] rounded"
+                width={500}
+                height={300}
+                alt="image"
+              />
+
               <div className="flex flex-col justify-between col-span-2">
                 <div className="space-y-4">
                   <h1 className="text-3xl">{news.title}</h1>

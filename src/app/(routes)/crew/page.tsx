@@ -15,34 +15,33 @@ export default async function Crew() {
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
       }}
-      className="text-white min-h-full"
+      className="flex items-center justify-center text-white lg:h-full"
     >
       <Container
         classes={{
           container:
-            "grid grid-cols-1 md:grid-cols-3 gap-y-10 md:gap-10 w-full pt-48",
+            "grid grid-cols-1 lg:grid-cols-3 gap-10 md:gap-10 w-full pt-48",
         }}
       >
         <IssLocationMap />
 
-        <div className="flex flex-col gap-4 h-[700px] overflow-hidden">
-          <h1 className="text-4xl font-light text-center md:text-left ">
+        <div className="flex flex-col gap-4 max-h-[700px] overflow-hidden">
+          <h1 className="text-4xl font-light text-center md:text-left">
             {numberOfPeopleInSpace} PEOPLE IN SPACE
           </h1>
+
           <div className="flex flex-col gap-4 overflow-y-scroll px-4">
-            {people.map(({ craft, name }) => {
-              return (
-                <Card
-                  key={name}
-                  classes={{
-                    card: "cursor-pointer bg-opacity-20 hover:bg-opacity-100 text-white hover:text-black hover:scale-105 transition-all duration-300 px-4",
-                  }}
-                >
-                  <p>CRAFT: {craft}</p>
-                  <p>CREW MEMBER: {name}</p>
-                </Card>
-              );
-            })}
+            {people.map(({ craft, name }) => (
+              <Card
+                key={name}
+                classes={{
+                  card: "cursor-pointer bg-opacity-20 hover:bg-opacity-100 text-white hover:text-black hover:scale-105 transition-all duration-300 px-4 w-full",
+                }}
+              >
+                <p>CRAFT: {craft}</p>
+                <p>CREW MEMBER: {name}</p>
+              </Card>
+            ))}
           </div>
         </div>
       </Container>

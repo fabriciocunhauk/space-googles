@@ -70,11 +70,11 @@ function IssLocationMap() {
   };
 
   return (
-    <div className="col-span-2 space-y-4">
+    <div className="col-span-1 lg:col-span-2 space-y-4">
       <h1 className="text-4xl font-light  text-center md:text-left">
         ISS REALTIME LOCATION
       </h1>
-      {isLoaded ? (
+      {isLoaded && (
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={center}
@@ -83,8 +83,6 @@ function IssLocationMap() {
         >
           <Marker {...marker} />
         </GoogleMap>
-      ) : (
-        <></>
       )}
     </div>
   );
