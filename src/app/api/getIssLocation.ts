@@ -1,22 +1,16 @@
-type ISSPositionProps = {
-  iss_position: { longitude: number; latitude: number };
-};
-
 export const getIssLocation = async () => {
-  const updateISSLocation = async () => {
-    const dataISScurrentLocation: ISSPositionProps = await fetch(
-      "http://api.open-notify.org/iss-now.json"
-    )
-      .then((response) => response.json())
-      .then((data) => data);
-
-    const { iss_position: ISScurrentLocation } = dataISScurrentLocation;
-
-    const longitude = Number(ISScurrentLocation.longitude);
-    const latitude = Number(ISScurrentLocation.latitude);
-
-    return { longitude, latitude };
-  };
-
-  return updateISSLocation();
+  try {
+    const response = await fetch("https://api.wheretheiss.at/v1/satellites/25544");
+    const data = await response.json();
+    
+    return {
+      longitude: Number(data.longitude),
+      latitude: Number(data.latitude),
+      velocity: Number(data.velocity),
+      altitude: Number(data.altitude)
+    };
+  } catch (error) {
+    console.error("Error fetching ISS location:", error);
+    return { longitude: 0, latitude: 0, velocity: 0, altitude: 0 };
+  }
 };

@@ -8,12 +8,12 @@ const Card = ({
 }: {
   children: ReactNode;
   onClick?: () => void;
-  classes?: { card: string };
+  classes?: { card?: string };
 }) => {
   return (
     <div
       className={classNames(
-        "flex flex-col p-2 bg-white text-black rounded ",
+        "glass-card",
         classes?.card
       )}
       onClick={onClick}

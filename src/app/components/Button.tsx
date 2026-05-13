@@ -19,13 +19,15 @@ export const Button = ({
   onClick,
   ...props
 }: ButtonProps) => {
+  const baseClasses = "flex items-center justify-center rounded-full transition-all duration-300";
+
   return (
     <>
       {href ? (
         <Link
           href={href}
           className={classNames(
-            "flex items-center justify-center rounded-full bg-white w-52 h-52",
+            baseClasses,
             classes?.link
           )}
           {...props}
@@ -37,7 +39,7 @@ export const Button = ({
           onClick={onClick}
           type={type}
           className={classNames(
-            "flex items-center justify-center rounded-full bg-white w-52 h-52",
+            baseClasses,
             classes?.button
           )}
           {...props}
