@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { classNames } from "@/app/utils/tilwind-jit-set";
-import backgroundDesktop from "/public/assets/destination/background-destination-desktop.jpg";
+import backgroundDesktop from "/public/assets/planets/background-destination-desktop.jpg";
 import Container from "@/app/components/Container";
 import { fetchPlanetData } from "@/app/api/fetchPlanetData";
 import { fetchPlanetImages } from "@/app/api/fetchPlanetImages";
@@ -32,7 +32,65 @@ const planetList = [
   "uranus",
   "jupiter",
   "neptune",
+  "pluto",
+  "moon",
+  "europa",
+  "titan",
 ];
+
+const planetImages: Record<string, string> = {
+  earth: "/assets/planets/earth.webp",
+  mars: "/assets/planets/mars.webp",
+  mercury: "/assets/planets/mercury.webp",
+  venus: "/assets/planets/venus.webp",
+  saturn: "/assets/planets/saturn.webp",
+  uranus: "/assets/planets/uranus.webp",
+  jupiter: "/assets/planets/jupiter.webp",
+  neptune: "/assets/planets/neptune.webp",
+  pluto: "/assets/planets/pluto.webp",
+  moon: "/assets/planets/moon.webp",
+  europa: "/assets/planets/europa.webp",
+  titan: "/assets/planets/titan.webp",
+};
+
+const fallbackPlanetData: Record<string, PlanetData> = {
+  moon: {
+    name: "Moon",
+    tagline: "Earth's natural satellite",
+    picture: "/assets/planets/moon.webp",
+    description: "See our planet as you’ve never seen it before. A perfect relaxing trip away to help regain perspective and come back refreshed. While you’re there, take in some history by visiting the Luna 2 and Apollo 11 landing sites.",
+    distanceFromSun: "384,400 km",
+    yearLength: "27.3",
+    numberOfMoons: 0,
+  },
+  europa: {
+    name: "Europa",
+    tagline: "One of Jupiter's moons",
+    picture: "/assets/planets/europa.webp",
+    description: "The smallest of the four Galilean moons orbiting Jupiter, Europa is a winter lover’s dream. With an icy surface, it’s perfect for a bit of ice skating, curling, hockey, or simple relaxation in your snug wintery cabin.",
+    distanceFromSun: "628,300,000 km",
+    yearLength: "3.5",
+    numberOfMoons: 0,
+  },
+  titan: {
+    name: "Titan",
+    tagline: "Saturn's largest moon",
+    picture: "/assets/planets/titan.webp",
+    description: "The only moon known to have a dense atmosphere, and the only object in space, other than Earth, where clear evidence of stable bodies of surface liquid has been found. Titan is a holiday for adventurers.",
+    distanceFromSun: "1,400,000,000 km",
+    yearLength: "15.9",
+    numberOfMoons: 0,
+  },
+  pluto: {
+    name: "Pluto",
+    tagline: "The beloved dwarf planet",
+    picture: "/assets/planets/pluto.webp",
+    description: "Pluto is a complex world with mountains, valleys, plains, craters, and apparently even glaciers. It was long considered our ninth planet, but is now classified as a dwarf planet. It remains a fan favorite and a mysterious destination in the Kuiper Belt.",
+    distanceFromSun: "5.9 billion km",
+    yearLength: "248 years",
+    numberOfMoons: 5,
+  },
+};
 
 export default function Planets() {
   const [planetName, setPlanetName] = useState("earth");
@@ -46,9 +104,14 @@ export default function Planets() {
       setLoading(true);
       try {
         const info = await fetchPlanetData(planetName);
-        setPlanetData(info);
+        if (info.error) {
+          setPlanetData(fallbackPlanetData[planetName] || null);
+        } else {
+          setPlanetData(info);
+        }
       } catch (error) {
         console.error("Error fetching planet data:", error);
+        setPlanetData(fallbackPlanetData[planetName] || null);
       } finally {
         setLoading(false);
       }
@@ -96,10 +159,10 @@ export default function Planets() {
           <div className="flex justify-center animate-in zoom-in-75 duration-1000">
             <div className="relative w-[300px] h-[300px] md:w-[450px] md:h-[450px]">
               <div className="absolute inset-0 bg-nebula-blue/20 blur-[100px] rounded-full animate-pulse" />
-              {planetData?.picture && (
+              {(planetImages[planetName] || planetData?.picture) && (
                 <Image
-                  src={planetData.picture}
-                  alt={planetData.name}
+                  src={planetImages[planetName] || planetData!.picture}
+                  alt={planetData?.name || planetName}
                   fill
                   className={classNames(
                     "object-contain transition-all duration-700 drop-shadow-[0_0_50px_rgba(255,255,255,0.2)]",
