@@ -29,12 +29,13 @@ export const Navbar = () => {
     <>
       <nav 
         className={classNames(
-          "fixed top-0 w-full z-50 transition-all duration-500",
+          "fixed top-0 w-full z-50 transition-all duration-500 select-none",
           scrolled ? "py-4 glass border-b border-white/10" : "py-10 sm:py-16 bg-transparent"
         )}
+        style={{ WebkitTapHighlightColor: "transparent" }}
       >
         <Container classes={{ container: "flex justify-between items-center" }}>
-          <Link href="/" className="flex items-center transition-transform hover:scale-105 active:scale-95">
+          <Link href="/" className="flex items-center transition-transform hover:scale-105 active:scale-95 outline-none focus:outline-none ring-0">
             <Image src={HomeLogo} className="w-10 h-10 md:w-12 md:h-12" alt="Space Googles Logo" />
           </Link>
 
@@ -44,11 +45,11 @@ export const Navbar = () => {
               <li
                 key={id}
                 className={classNames(
-                  "relative group cursor-pointer font-Barlow-Condensed tracking-[2.7px] text-base uppercase transition-all",
+                  "relative group cursor-pointer font-Barlow-Condensed tracking-[2.7px] text-base uppercase transition-all outline-none focus:outline-none",
                   href === pathname ? "text-white" : "text-nebula-blue hover:text-white"
                 )}
               >
-                <Link href={href} aria-label={`Navigate to ${name}`}>
+                <Link href={href} aria-label={`Navigate to ${name}`} className="focus:outline-none outline-none ring-0 border-none">
                   <span className="mr-2 font-bold opacity-50">0{id}</span>
                   {name}
                 </Link>
@@ -65,7 +66,7 @@ export const Navbar = () => {
 
           {/* Mobile Menu Toggle */}
           <button 
-            className="lg:hidden p-2 text-3xl text-white transition-colors hover:text-nebula-blue"
+            className="lg:hidden p-2 text-3xl text-white transition-colors hover:text-nebula-blue outline-none focus:outline-none ring-0"
             onClick={handleMobileMenuToggle}
             aria-label="Open mobile menu"
           >
@@ -83,7 +84,7 @@ export const Navbar = () => {
       >
         <div className="flex flex-col h-full p-8">
           <button
-            className="self-end text-4xl text-white p-2 hover:rotate-90 transition-transform duration-300"
+            className="self-end text-4xl text-white p-2 hover:rotate-90 transition-transform duration-300 outline-none focus:outline-none ring-0"
             onClick={handleMobileMenuToggle}
             aria-label="Close mobile menu"
           >
@@ -95,7 +96,7 @@ export const Navbar = () => {
               <li
                 key={id}
                 className={classNames(
-                  "text-2xl font-Barlow-Condensed tracking-[2.7px] uppercase transition-all",
+                  "text-2xl font-Barlow-Condensed tracking-[2.7px] uppercase transition-all outline-none focus:outline-none",
                   href === pathname ? "text-white border-r-4 border-white pr-4" : "text-nebula-blue"
                 )}
               >
@@ -103,7 +104,7 @@ export const Navbar = () => {
                   href={href}
                   aria-label={`Navigate to ${name}`}
                   onClick={handleMobileMenuToggle}
-                  className="flex items-center"
+                  className="flex items-center outline-none focus:outline-none ring-0"
                 >
                   <span className="mr-4 font-bold opacity-50">0{id}</span>
                   {name}

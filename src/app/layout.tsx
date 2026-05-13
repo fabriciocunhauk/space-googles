@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter, Bellefair, Barlow_Condensed } from "next/font/google";
 import { Navbar } from "./components/NavBar";
+import Footer from "./components/Footer";
 import { classNames } from "./utils/tilwind-jit-set";
 
 const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
@@ -29,6 +30,7 @@ export default function RootLayout({
       )}>
         <Navbar />
         {children}
+        <Footer />
       </body>
     </html>
   );

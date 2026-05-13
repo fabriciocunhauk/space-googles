@@ -15,7 +15,7 @@ export default function Planets() {
 
   return (
     <section
-      className="relative min-h-screen pt-32 pb-20 text-white overflow-hidden"
+      className="relative min-h-screen pt-44 pb-20 text-white overflow-hidden"
       style={{
         backgroundImage: `linear-gradient(rgba(11, 13, 23, 0.6), rgba(11, 13, 23, 0.6)), url(${backgroundDesktop.src})`,
         backgroundPosition: "center",

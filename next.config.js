@@ -6,7 +6,18 @@ const nextConfig = {
         protocol: "https",
         hostname: "**",
       },
+      {
+        protocol: "http",
+        hostname: "**",
+      }
     ],
+    domains: [
+      'spaceflightnow.com',
+      'mars.nasa.gov',
+      'www.nasa.gov',
+      'images-assets.nasa.gov',
+      'api.spaceflightnewsapi.net'
+    ]
   },
 }
 

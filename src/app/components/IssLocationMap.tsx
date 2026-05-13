@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useState, useEffect } from "react";
-import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, Marker, Polyline, Circle, useJsApiLoader } from "@react-google-maps/api";
 import issIcon from "../../../public/assets/International_Space_Station.svg";
 import { getIssLocation } from "../api/getIssLocation";
 
@@ -15,10 +15,16 @@ const mapStyles = [
     elementType: "labels.text.fill",
     stylers: [{ color: "#d59563" }],
   },
-  // ... more styles can be added for a truly dark experience
 ];
 
-function IssLocationMap() {
+interface PathPoint {
+  lat: number;
+  lon: number;
+  time: string;
+  country: string;
+}
+
+function IssLocationMap({ futurePath = [] }: { futurePath?: PathPoint[] }) {
   const [location, setLocation] = useState({ longitude: 0, latitude: 0, velocity: 0, altitude: 0 });
 
   useEffect(() => {
@@ -43,16 +49,49 @@ function IssLocationMap() {
     lng: location.longitude,
   };
 
+  // Limit to next 120 minutes (approx 6 points if every 20m) to show a single clear orbit
+  const polylinePath = [
+    center,
+    ...futurePath.slice(0, 6).map(p => ({ lat: p.lat, lng: p.lon }))
+  ];
+
+  // Helper to split path at the Date Line to avoid "line across the map" artifact
+  const splitPathAtDateLine = (path: { lat: number, lng: number }[]) => {
+    const segments: { lat: number, lng: number }[][] = [[]];
+    let currentSegmentIndex = 0;
+
+    for (let i = 0; i < path.length; i++) {
+      const point = path[i];
+      const prevPoint = path[i - 1];
+
+      if (prevPoint && Math.abs(point.lng - prevPoint.lng) > 180) {
+        // Date Line crossing detected
+        currentSegmentIndex++;
+        segments[currentSegmentIndex] = [];
+      }
+      segments[currentSegmentIndex].push(point);
+    }
+    return segments;
+  };
+
+  const pathSegments = splitPathAtDateLine(polylinePath);
+
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: `${googleMapApiKey}`,
   });
 
-  const [, setMap] = useState<google.maps.Map | null>(null);
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+
+  useEffect(() => {
+    if (map && location.latitude !== 0) {
+      map.panTo(center);
+    }
+  }, [location, map]);
 
   const handleMapLoad = useCallback((map: google.maps.Map) => {
     setMap(map);
-    map.setZoom(3);
+    map.setZoom(2);
     map.setMapTypeId("satellite");
   }, []);
 
@@ -61,7 +100,7 @@ function IssLocationMap() {
   }, []);
 
   return (
-    <div className="relative w-full h-full group">
+    <div className="relative w-full h-full group select-none">
       {isLoaded && (
         <GoogleMap
           mapContainerStyle={containerStyle}
@@ -74,6 +113,45 @@ function IssLocationMap() {
             zoomControl: true,
           }}
         >
+          {/* Field of View Circle */}
+          <Circle
+            center={center}
+            radius={2200000} // ~2200km visibility radius
+            options={{
+              strokeColor: "#FFFFFF",
+              strokeOpacity: 0.15,
+              strokeWeight: 1,
+              fillColor: "#FFFFFF",
+              fillOpacity: 0.05,
+              clickable: false,
+              draggable: false,
+              editable: false,
+              visible: true,
+              zIndex: 1
+            }}
+          />
+
+          {/* Trajectory Line Segments */}
+          {pathSegments.map((segment, idx) => (
+            <Polyline
+              key={idx}
+              path={segment}
+              options={{
+                strokeColor: "#FFD700",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                geodesic: true,
+                icons: [
+                  {
+                    icon: { path: "M 0,-1 0,1", strokeOpacity: 1, scale: 3 },
+                    offset: "0",
+                    repeat: "15px",
+                  },
+                ],
+              }}
+            />
+          ))}
+
           <Marker 
             position={center}
             icon={{
