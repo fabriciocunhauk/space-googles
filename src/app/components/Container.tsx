@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { classNames } from "../utils/tilwind-jit-set";
+import { classNames } from "../utils/classNames";
 
 type ContainerProps = {
   children: ReactNode;

@@ -1,4 +1,4 @@
-import { classNames } from "@/app/utils/tilwind-jit-set";
+import { classNames } from "@/app/utils/classNames";
 import type { ReactNode } from "react";
 
 const Card = ({

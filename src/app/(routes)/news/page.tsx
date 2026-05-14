@@ -4,7 +4,7 @@ import Container from "@/app/components/Container";
 import background from "/public/assets/crew/background-crew-desktop.jpg";
 import Image from "next/image";
 import { fetchNews } from "@/app/api/fetchNews";
-import { classNames } from "@/app/utils/tilwind-jit-set";
+import { classNames } from "@/app/utils/classNames";
 import { FaRegClock, FaExternalLinkAlt, FaStar } from "react-icons/fa";
 
 type NewsData = {

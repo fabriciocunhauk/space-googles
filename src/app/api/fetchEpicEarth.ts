@@ -1,5 +1,11 @@
 const NASA_KEY = process.env.NEXT_PUBLIC_NASA_API_KEY || "DEMO_KEY";
 
+/**
+ * Fetches the latest natural color imagery of Earth from NASA's EPIC (Earth Polychromatic Imaging Camera).
+ * 
+ * @returns {Promise<{url: string, caption: string, date: string, coords: {lat: string, lon: string}} | null>} 
+ * The latest Earth image metadata or null if the request fails.
+ */
 export const fetchEpicEarth = async () => {
   try {
     const response = await fetch(

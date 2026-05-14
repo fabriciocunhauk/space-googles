@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { classNames } from "@/app/utils/tilwind-jit-set";
+import { classNames } from "@/app/utils/classNames";
 
 type PlanetVisualProps = {
   src: string | null;

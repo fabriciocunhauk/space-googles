@@ -1,3 +1,9 @@
+/**
+ * Fetches dynamic technical specifications for SpaceX launch vehicles.
+ * Normalizes rocket data including payload, height, thrust, and imagery.
+ * 
+ * @returns {Promise<any[]>} A list of dynamic rocket specifications.
+ */
 export const fetchRockets = async () => {
   try {
     const response = await fetch("https://api.spacexdata.com/v4/rockets");

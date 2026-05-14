@@ -5,7 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import Container from "./Container";
 import { navigation } from "../utils/navbar.utils";
-import { classNames } from "../utils/tilwind-jit-set";
+import { classNames } from "../utils/classNames";
 import { IoMdClose } from "react-icons/io";
 import { GiHamburgerMenu } from "react-icons/gi";
 import HomeLogo from "../../../public/assets/logo.svg";

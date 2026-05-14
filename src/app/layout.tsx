@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Inter, Bellefair, Barlow_Condensed } from "next/font/google";
 import { Navbar } from "./components/NavBar";
 import Footer from "./components/Footer";
-import { classNames } from "./utils/tilwind-jit-set";
+import { classNames } from "./utils/classNames";
 
 const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
 const bellefair = Bellefair({ subsets: ["latin"], weight: '400', variable: '--font-bellefair' });

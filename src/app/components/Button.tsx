@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { classNames } from "../utils/tilwind-jit-set";
+import { classNames } from "../utils/classNames";
 import type { ReactNode } from "react";
 
 type ButtonProps = {
