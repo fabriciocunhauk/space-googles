@@ -1,39 +1,22 @@
-async function testFetch() {
-  const response = await fetch(
-    "https://api.spacexdata.com/v5/launches/query",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: {},
-        options: {
-          populate: [
-            {
-              path: "rocket",
-              select: {
-                name: 1,
-              },
-            },
-            {
-              path: "launchpad",
-              select: {
-                name: 1,
-                full_name: 1,
-              },
-            },
-          ],
-          sort: {
-            date_utc: "desc",
-          },
-          limit: 20,
-        },
-      }),
-    }
-  );
-  const data = await response.json();
-  console.log(JSON.stringify(data, null, 2));
+const NASA_KEY = "DEMO_KEY";
+
+async function test() {
+  const fetch = (await import('node-fetch')).default;
+  
+  console.log("Testing NEO...");
+  const today = new Date().toISOString().split("T")[0];
+  const neoRes = await fetch(`https://api.nasa.gov/neo/rest/v1/feed?start_date=${today}&end_date=${today}&api_key=${NASA_KEY}`);
+  console.log("NEO Status:", neoRes.status);
+
+  console.log("Testing DONKI...");
+  const spaceRes = await fetch(`https://api.nasa.gov/DONKI/FLR?startDate=${today}&api_key=${NASA_KEY}`);
+  console.log("DONKI Status:", spaceRes.status);
+
+  console.log("Testing EPIC...");
+  const epicRes = await fetch(`https://api.nasa.gov/EPIC/api/natural/images?api_key=${NASA_KEY}`);
+  console.log("EPIC Status:", epicRes.status);
+  const epicData = await epicRes.json();
+  console.log("EPIC Data Length:", epicData.length);
 }
 
-testFetch();
+test();
