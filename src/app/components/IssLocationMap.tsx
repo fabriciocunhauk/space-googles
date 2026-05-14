@@ -1,6 +1,7 @@
 "use client";
-import React, { useCallback, useState, useEffect } from "react";
-import { GoogleMap, Marker, Polyline, Circle, useJsApiLoader } from "@react-google-maps/api";
+import React, { useCallback, useState, useEffect, useMemo } from "react";
+import { GoogleMap, Marker, Circle, useJsApiLoader } from "@react-google-maps/api";
+import Image from "next/image";
 import issIcon from "../../../public/assets/International_Space_Station.svg";
 import { getIssLocation } from "../api/getIssLocation";
 
@@ -44,37 +45,10 @@ function IssLocationMap({ futurePath = [] }: { futurePath?: PathPoint[] }) {
     height: "100%",
   };
 
-  const center = {
+  const center = useMemo(() => ({
     lat: location.latitude,
     lng: location.longitude,
-  };
-
-  // Limit to next 120 minutes (approx 6 points if every 20m) to show a single clear orbit
-  const polylinePath = [
-    center,
-    ...futurePath.slice(0, 6).map(p => ({ lat: p.lat, lng: p.lon }))
-  ];
-
-  // Helper to split path at the Date Line to avoid "line across the map" artifact
-  const splitPathAtDateLine = (path: { lat: number, lng: number }[]) => {
-    const segments: { lat: number, lng: number }[][] = [[]];
-    let currentSegmentIndex = 0;
-
-    for (let i = 0; i < path.length; i++) {
-      const point = path[i];
-      const prevPoint = path[i - 1];
-
-      if (prevPoint && Math.abs(point.lng - prevPoint.lng) > 180) {
-        // Date Line crossing detected
-        currentSegmentIndex++;
-        segments[currentSegmentIndex] = [];
-      }
-      segments[currentSegmentIndex].push(point);
-    }
-    return segments;
-  };
-
-  const pathSegments = splitPathAtDateLine(polylinePath);
+  }), [location.latitude, location.longitude]);
 
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
@@ -95,9 +69,9 @@ function IssLocationMap({ futurePath = [] }: { futurePath?: PathPoint[] }) {
   // Auto-center on location update
   useEffect(() => {
     if (map && location.latitude !== 0) {
-      map.setCenter(center); // Use setCenter for immediate positioning on load
+      map.setCenter(center);
     }
-  }, [location.latitude, location.longitude, map]);
+  }, [center, map, location.latitude]);
 
   const handleMapLoad = useCallback((map: google.maps.Map) => {
     setMap(map);
@@ -107,7 +81,7 @@ function IssLocationMap({ futurePath = [] }: { futurePath?: PathPoint[] }) {
     if (location.latitude !== 0) {
       map.setCenter(center);
     }
-  }, [location.latitude, location.longitude]);
+  }, [center, location.latitude]);
 
   const handleMapUnmount = useCallback(() => {
     setMap(null);
@@ -124,7 +98,7 @@ function IssLocationMap({ futurePath = [] }: { futurePath?: PathPoint[] }) {
         <div className="relative z-10 space-y-6">
           <div className="w-32 h-32 mx-auto relative">
              <div className="absolute inset-0 bg-nebula-blue/20 blur-2xl rounded-full animate-pulse" />
-             <img src={issIcon.src} alt="ISS" className="w-full h-full relative z-10 animate-bounce-slow" />
+             <Image src={issIcon} alt="ISS" className="w-full h-full relative z-10 animate-bounce-slow" />
           </div>
           <div className="space-y-2">
             <h3 className="text-3xl font-Bellefair text-glow uppercase">Telemetry Mode Active</h3>
@@ -146,7 +120,6 @@ function IssLocationMap({ futurePath = [] }: { futurePath?: PathPoint[] }) {
           </div>
         </div>
 
-        {/* Reusing the telemetry overlay for consistency */}
         <div className="absolute bottom-6 left-6 right-6 flex flex-wrap gap-4 z-20 justify-center">
           <div className="glass px-6 py-3 rounded-2xl flex flex-col">
             <span className="text-[10px] text-nebula-blue uppercase tracking-widest font-Barlow-Condensed">Latitude</span>
@@ -177,13 +150,12 @@ function IssLocationMap({ futurePath = [] }: { futurePath?: PathPoint[] }) {
             styles: mapStyles,
             disableDefaultUI: true,
             zoomControl: true,
-            gestureHandling: "greedy" // Make it easier to move on touch
+            gestureHandling: "greedy"
           }}
         >
-          {/* Field of View Circle */}
           <Circle
             center={center}
-            radius={2200000} // ~2200km visibility radius
+            radius={2200000}
             options={{
               strokeColor: "#D0D6F9",
               strokeOpacity: 0.6,
@@ -206,7 +178,6 @@ function IssLocationMap({ futurePath = [] }: { futurePath?: PathPoint[] }) {
         </GoogleMap>
       )}
 
-      {/* Telemetry Overlay */}
       <div className="absolute bottom-6 left-6 right-6 flex flex-wrap gap-4 z-20">
         <div className="glass px-6 py-3 rounded-2xl flex flex-col">
           <span className="text-[10px] text-nebula-blue uppercase tracking-widest font-Barlow-Condensed">Latitude</span>

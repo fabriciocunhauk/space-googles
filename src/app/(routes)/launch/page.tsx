@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useEffect, useState, useMemo } from "react";
 import background from "/public/assets/launch/background-technology-desktop.jpg";
 import Container from "@/app/components/Container";
@@ -182,9 +183,15 @@ export default function Launch() {
                     )}
                     onClick={() => setSelectedIndex(index)}
                   >
-                    <div className="flex-shrink-0 w-11 h-11 rounded-xl overflow-hidden bg-white/5 flex items-center justify-center">
+                    <div className="flex-shrink-0 w-11 h-11 rounded-xl overflow-hidden bg-white/5 flex items-center justify-center relative">
                       {launch.links.patch.small ? (
-                        <img src={launch.links.patch.small} alt={launch.name} className="w-full h-full object-contain" />
+                        <Image 
+                          src={launch.links.patch.small} 
+                          alt={launch.name} 
+                          width={44}
+                          height={44}
+                          className="w-full h-full object-contain" 
+                        />
                       ) : (
                         <FaRocket className="text-white/20 text-lg" />
                       )}
@@ -221,7 +228,12 @@ export default function Launch() {
                   ) : (
                     <div className="w-full h-full relative group">
                       {selectedLaunch.links.patch.large && (
-                        <img src={selectedLaunch.links.patch.large} alt={selectedLaunch.name} className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-700" />
+                        <Image 
+                          src={selectedLaunch.links.patch.large} 
+                          alt={selectedLaunch.name} 
+                          fill
+                          className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-700" 
+                        />
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
                       <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
