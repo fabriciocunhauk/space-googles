@@ -25,11 +25,11 @@
 
 @layer components {
   .glass {
-    @apply bg-white bg-opacity-[0.05] backdrop-blur-md border border-white border-opacity-10 shadow-xl;
+    @apply bg-white bg-opacity-[0.05] backdrop-blur-md shadow-xl;
   }
 
   .glass-card {
-    @apply glass rounded-2xl p-6 transition-all duration-300 hover:bg-opacity-[0.08] hover:border-opacity-20;
+    @apply glass rounded-2xl p-6 transition-all duration-300;
   }
 
   .text-glow {

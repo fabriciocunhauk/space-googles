@@ -30,7 +30,9 @@ export const Navbar = () => {
       <nav
         className={classNames(
           "fixed top-0 w-full z-50 transition-all duration-500 select-none",
-          scrolled ? "py-4 glass" : "py-10 sm:py-16 bg-transparent",
+          scrolled
+            ? "py-4 glass backdrop-blur-xl"
+            : "py-10 sm:py-16 bg-transparent",
         )}
         style={{ WebkitTapHighlightColor: "transparent" }}
       >
