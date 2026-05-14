@@ -1,4 +1,4 @@
-export const fetchLaunches = async () => {
+async function testFetch() {
   const response = await fetch(
     "https://api.spacexdata.com/v5/launches/query",
     {
@@ -7,9 +7,7 @@ export const fetchLaunches = async () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        query: {
-          upcoming: true
-        },
+        query: {},
         options: {
           populate: [
             {
@@ -27,7 +25,7 @@ export const fetchLaunches = async () => {
             },
           ],
           sort: {
-            date_utc: "asc",
+            date_utc: "desc",
           },
           limit: 20,
         },
@@ -35,6 +33,7 @@ export const fetchLaunches = async () => {
     }
   );
   const data = await response.json();
+  console.log(JSON.stringify(data, null, 2));
+}
 
-  return data.docs;
-};
+testFetch();

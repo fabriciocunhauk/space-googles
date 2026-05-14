@@ -1,18 +1,15 @@
 import background from "/public/assets/crew/background-crew-desktop.jpg";
 import Container from "@/app/components/Container";
-import IssLocationMap from "@/app/components/IssLocationMap";
 import { fetchNumberOfPeopleInSpace } from "@/app/api/fetchNumberOfPeopleInSpace";
-import { fetchIssFuturePath } from "@/app/api/fetchIssFuturePath";
-import { FaUserAstronaut, FaSpaceShuttle, FaGlobeAmericas, FaMapMarkedAlt } from "react-icons/fa";
+import IssLife from "./components/IssLife";
+import IssTrackerSection from "./components/IssTrackerSection";
+import { FaUserAstronaut, FaSpaceShuttle } from "react-icons/fa";
 
 export default async function Crew() {
-  const [{ numberOfPeopleInSpace, people }, futurePath] = await Promise.all([
-    fetchNumberOfPeopleInSpace(),
-    fetchIssFuturePath()
-  ]);
+  // Fast: single HTTP call, no heavy processing
+  const { numberOfPeopleInSpace, people } = await fetchNumberOfPeopleInSpace();
 
-  // Calculate mission stats
-  const craftStats = people.reduce((acc: any, person: any) => {
+  const craftStats = people.reduce((acc: Record<string, number>, person: any) => {
     acc[person.craft] = (acc[person.craft] || 0) + 1;
     return acc;
   }, {});
@@ -20,111 +17,98 @@ export default async function Crew() {
   return (
     <main
       style={{
-        backgroundImage: `linear-gradient(rgba(11, 13, 23, 0.7), rgba(11, 13, 23, 0.7)), url(${background.src})`,
+        backgroundImage: `linear-gradient(rgba(11, 13, 23, 0.75), rgba(11, 13, 23, 0.75)), url(${background.src})`,
         backgroundPosition: "center",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed"
+        backgroundAttachment: "fixed",
       }}
-      className="relative flex items-center justify-center text-white min-h-screen pt-44 pb-20 overflow-hidden"
+      className="relative text-white min-h-screen pt-44 pb-20 overflow-hidden"
     >
-      <Container
-        classes={{
-          container:
-            "flex flex-col gap-16 w-full h-full relative z-10",
-        }}
-      >
-        {/* Mission Stats Dashboard */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-in fade-in slide-in-from-top-8 duration-1000">
-           <div className="glass p-8 rounded-[32px] border border-white/10 flex items-center gap-6">
-              <div className="p-4 bg-white/5 rounded-2xl">
-                 <FaUserAstronaut className="text-3xl text-nebula-blue" />
-              </div>
-              <div>
-                 <p className="text-[10px] text-nebula-blue uppercase tracking-widest font-Barlow-Condensed">Total Personnel</p>
-                 <p className="text-3xl font-Bellefair">{numberOfPeopleInSpace}</p>
-              </div>
-           </div>
-           {Object.entries(craftStats).map(([craft, count]: [any, any], i: number) => (
-             <div key={i} className="glass p-8 rounded-[32px] border border-white/10 flex items-center gap-6">
-                <div className="p-4 bg-white/5 rounded-2xl">
-                   <FaSpaceShuttle className="text-3xl text-accent-gold" />
-                </div>
-                <div>
-                   <p className="text-[10px] text-nebula-blue uppercase tracking-widest font-Barlow-Condensed">{craft} Crew</p>
-                   <p className="text-3xl font-Bellefair">{count} Members</p>
-                </div>
-             </div>
-           ))}
-        </div>
+      {/* Ambient glow */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 left-1/4 w-[600px] h-[400px] bg-nebula-blue/5 blur-[120px] rounded-full" />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[300px] bg-accent-gold/4 blur-[150px] rounded-full" />
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
-          {/* ISS Tracking Section */}
-          <div className="lg:col-span-2 space-y-8 animate-in fade-in slide-in-from-left-8 duration-1000">
-            <header className="space-y-4">
-              <div className="flex items-center gap-3 text-nebula-blue">
-                 <FaGlobeAmericas className="animate-spin-slow" />
-                 <p className="font-Barlow-Condensed tracking-[4.75px] uppercase">
-                    02 Real-time ISS Tracking
-                 </p>
-              </div>
-              <h1 className="text-5xl md:text-6xl font-Bellefair text-glow uppercase">
-                Current Location
-              </h1>
-            </header>
-            <div className="glass rounded-[40px] overflow-hidden border border-white/20 shadow-[0_0_50px_rgba(0,0,0,0.5)] h-[500px] md:h-[650px] relative">
-              <IssLocationMap futurePath={futurePath} />
-              <div className="absolute bottom-6 right-6 glass px-6 py-2 rounded-full text-[10px] font-bold tracking-widest uppercase border border-white/10 text-white/80">
-                 Telemetry Stream Active
-              </div>
+      <Container classes={{ container: "flex flex-col gap-14 w-full relative z-10" }}>
+
+        {/* ── Stats Dashboard ───────────────────────────────── */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 animate-in fade-in slide-in-from-top-4 duration-700">
+          {/* Total personnel */}
+          <div className="glass p-7 rounded-[28px] border border-white/10 flex items-center gap-5">
+            <div className="p-3.5 bg-nebula-blue/10 rounded-2xl flex-shrink-0">
+              <FaUserAstronaut className="text-2xl text-nebula-blue" />
             </div>
-
-            {/* ISS Future Path Section */}
-            <div className="space-y-6 pt-8">
-               <div className="flex items-center gap-3 text-accent-gold">
-                  <FaMapMarkedAlt className="text-2xl" />
-                  <h2 className="text-3xl font-Bellefair uppercase tracking-widest">Overflight Schedule (Next 24h)</h2>
-               </div>
-               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                  {futurePath.filter((p: any) => p.isMajor).map((p: any, i: number) => (
-                    <div key={i} className="glass p-4 rounded-2xl border border-white/5 flex flex-col items-center text-center gap-2 group hover:border-white/20 transition-all">
-                       <span className="text-[10px] text-nebula-blue/50 uppercase font-bold">{p.time}</span>
-                       <span className="text-xl font-Bellefair group-hover:text-glow">{p.country}</span>
-                    </div>
-                  ))}
-               </div>
-               <p className="text-[10px] text-white/30 italic">Note: ISS passes are approximate and coverage depends on orbital precision. &quot;Open Ocean&quot; refers to maritime transits.</p>
+            <div>
+              <p className="text-[9px] text-nebula-blue/60 uppercase tracking-[3px] font-Barlow-Condensed mb-1">
+                Total Personnel
+              </p>
+              <p className="text-4xl font-Bellefair">{numberOfPeopleInSpace}</p>
             </div>
           </div>
 
-          {/* Crew List Section */}
-          <div className="lg:col-span-1 flex flex-col gap-8 animate-in fade-in slide-in-from-right-8 duration-1000">
-            <header className="space-y-4 text-center lg:text-left">
-              <h2 className="text-4xl font-Bellefair text-glow uppercase tracking-wider">
-                Personnel Registry
+          {/* Per-craft stats */}
+          {Object.entries(craftStats).map(([craft, count], i) => (
+            <div key={i} className="glass p-7 rounded-[28px] border border-white/10 flex items-center gap-5">
+              <div className="p-3.5 bg-accent-gold/10 rounded-2xl flex-shrink-0">
+                <FaSpaceShuttle className="text-2xl text-accent-gold" />
+              </div>
+              <div>
+                <p className="text-[9px] text-nebula-blue/60 uppercase tracking-[3px] font-Barlow-Condensed mb-1">
+                  {craft} Crew
+                </p>
+                <p className="text-4xl font-Bellefair">{count as number} Members</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* ── ISS Tracker + Crew List ───────────────────────── */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-16 items-start">
+
+          {/* ISS tracker (client component — loads async with skeleton) */}
+          <div className="lg:col-span-2">
+            <IssTrackerSection />
+          </div>
+
+          {/* Crew List */}
+          <div className="lg:col-span-1 flex flex-col gap-6 animate-in fade-in slide-in-from-right-8 duration-1000">
+            <header className="space-y-3">
+              <p className="text-nebula-blue/60 font-Barlow-Condensed tracking-[4px] uppercase text-xs">
+                02 Personnel Registry
+              </p>
+              <h2 className="text-4xl font-Bellefair text-glow uppercase tracking-wide">
+                Active Crew
               </h2>
-              <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-white/20 to-transparent lg:via-white/20 lg:to-transparent" />
+              <div className="h-px w-full bg-gradient-to-r from-white/20 to-transparent" />
             </header>
 
-            <div className="flex flex-col gap-6 overflow-y-auto pr-4 custom-scrollbar max-h-[700px]">
-              {people.map(({ craft, name }) => (
+            <div className="flex flex-col gap-3 overflow-y-auto custom-scrollbar max-h-[700px] pr-1">
+              {people.map(({ craft, name }: { craft: string; name: string }) => (
                 <div
                   key={name}
-                  className="glass-card group flex flex-col gap-2 p-8 hover:bg-white/5 transition-all duration-500 border border-white/5 hover:border-white/20"
+                  className="group flex flex-col gap-1.5 p-5 glass rounded-2xl border border-white/5 hover:border-white/15 transition-all duration-300 hover:bg-white/[0.04]"
                 >
-                  <div className="flex justify-between items-start">
-                    <span className="text-[10px] font-Barlow-Condensed tracking-[2px] text-nebula-blue uppercase px-2 py-1 bg-white/5 rounded">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[9px] font-Barlow-Condensed tracking-[2px] text-nebula-blue/60 uppercase px-2 py-0.5 bg-white/5 rounded">
                       {craft}
                     </span>
-                    <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)] animate-pulse" />
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.6)] animate-pulse" />
+                      <span className="text-[8px] text-green-400/60 uppercase tracking-widest font-Barlow-Condensed">Active</span>
+                    </div>
                   </div>
-                  <p className="text-2xl font-Bellefair tracking-wide group-hover:text-glow transition-all">{name}</p>
-                  <p className="text-[10px] text-white/30 font-Barlow uppercase tracking-widest">Duty Status: Active</p>
+                  <p className="text-xl font-Bellefair tracking-wide group-hover:text-glow transition-all">
+                    {name}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
         </div>
+
+        <IssLife />
       </Container>
     </main>
   );

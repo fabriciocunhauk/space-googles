@@ -27,16 +27,23 @@ export const Navbar = () => {
 
   return (
     <>
-      <nav 
+      <nav
         className={classNames(
           "fixed top-0 w-full z-50 transition-all duration-500 select-none",
-          scrolled ? "py-4 glass border-b border-white/10" : "py-10 sm:py-16 bg-transparent"
+          scrolled ? "py-4 glass" : "py-10 sm:py-16 bg-transparent",
         )}
         style={{ WebkitTapHighlightColor: "transparent" }}
       >
         <Container classes={{ container: "flex justify-between items-center" }}>
-          <Link href="/" className="flex items-center transition-transform hover:scale-105 active:scale-95 outline-none focus:outline-none ring-0">
-            <Image src={HomeLogo} className="w-10 h-10 md:w-12 md:h-12" alt="Space Googles Logo" />
+          <Link
+            href="/"
+            className="flex items-center transition-transform hover:scale-105 active:scale-95 outline-none focus:outline-none ring-0"
+          >
+            <Image
+              src={HomeLogo}
+              className="w-10 h-10 md:w-12 md:h-12"
+              alt="Space Googles Logo"
+            />
           </Link>
 
           {/* Desktop Navigation */}
@@ -46,26 +53,34 @@ export const Navbar = () => {
                 key={id}
                 className={classNames(
                   "relative group cursor-pointer font-Barlow-Condensed tracking-[2.7px] text-base uppercase transition-all outline-none focus:outline-none",
-                  href === pathname ? "text-white" : "text-nebula-blue hover:text-white"
+                  href === pathname
+                    ? "text-white"
+                    : "text-nebula-blue hover:text-white",
                 )}
               >
-                <Link href={href} aria-label={`Navigate to ${name}`} className="focus:outline-none outline-none ring-0 border-none">
+                <Link
+                  href={href}
+                  aria-label={`Navigate to ${name}`}
+                  className="focus:outline-none outline-none ring-0 border-none"
+                >
                   <span className="mr-2 font-bold opacity-50">0{id}</span>
                   {name}
                 </Link>
                 {/* Active Indicator */}
-                <div 
+                <div
                   className={classNames(
                     "absolute -bottom-4 left-0 right-0 h-[3px] bg-white transition-all duration-300",
-                    href === pathname ? "opacity-100" : "opacity-0 group-hover:opacity-50"
-                  )} 
+                    href === pathname
+                      ? "opacity-100"
+                      : "opacity-0 group-hover:opacity-50",
+                  )}
                 />
               </li>
             ))}
           </ul>
 
           {/* Mobile Menu Toggle */}
-          <button 
+          <button
             className="lg:hidden p-2 text-3xl text-white transition-colors hover:text-nebula-blue outline-none focus:outline-none ring-0"
             onClick={handleMobileMenuToggle}
             aria-label="Open mobile menu"
@@ -79,7 +94,7 @@ export const Navbar = () => {
       <div
         className={classNames(
           "fixed inset-0 z-[60] glass backdrop-blur-2xl transition-all duration-500 lg:hidden",
-          menuOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
+          menuOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0",
         )}
       >
         <div className="flex flex-col h-full p-8">
@@ -90,14 +105,16 @@ export const Navbar = () => {
           >
             <IoMdClose />
           </button>
-          
+
           <ul className="flex flex-col gap-10 mt-20">
             {navigation.map(({ id, name, href }) => (
               <li
                 key={id}
                 className={classNames(
                   "text-2xl font-Barlow-Condensed tracking-[2.7px] uppercase transition-all outline-none focus:outline-none",
-                  href === pathname ? "text-white border-r-4 border-white pr-4" : "text-nebula-blue"
+                  href === pathname
+                    ? "text-white border-r-4 border-white pr-4"
+                    : "text-nebula-blue",
                 )}
               >
                 <Link

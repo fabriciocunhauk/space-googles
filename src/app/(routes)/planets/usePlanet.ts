@@ -25,6 +25,7 @@ export function usePlanet(planetName: string): UsePlanetReturn {
   const loadPlanetData = useCallback(async () => {
     if (!isPlanetName(planetName)) return;
     setLoading(true);
+    setPlanetData(null); // Clear stale data while loading new planet
     try {
       const data = await fetchPlanetData(planetName);
       if (data.error) {

@@ -6,22 +6,22 @@ export const navigation = [
   },
   {
     id: 1,
-    name: "NEWS",
-    href: "/news",
-  },
-  {
-    id: 2,
     name: "PLANETS",
     href: "/planets",
   },
   {
-    id: 3,
+    id: 2,
     name: "CREW",
     href: "/crew",
   },
   {
-    id: 4,
+    id: 3,
     name: "LAUNCH",
     href: "/launch",
+  },
+  {
+    id: 4,
+    name: "NEWS",
+    href: "/news",
   },
 ];

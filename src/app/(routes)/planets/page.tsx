@@ -7,6 +7,7 @@ import PlanetVisual from "./components/PlanetVisual";
 import PlanetNav from "./components/PlanetNav";
 import PlanetInfo from "./components/PlanetInfo";
 import NasaGallery from "./components/NasaGallery";
+import HistoricalMissions from "./components/HistoricalMissions";
 
 export default function Planets() {
   const [planetName, setPlanetName] = useState("earth");
@@ -42,10 +43,15 @@ export default function Planets() {
 
           <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-1000">
             <PlanetNav selected={planetName} onSelect={setPlanetName} />
-            <PlanetInfo planetData={planetData} planetName={planetName} />
+            <PlanetInfo 
+              planetData={planetData} 
+              planetName={planetName} 
+              loading={loading}
+            />
           </div>
         </div>
 
+        <HistoricalMissions planetName={planetName} />
         <NasaGallery photos={planetPhotos} loading={loadingPhotos} />
       </Container>
     </section>

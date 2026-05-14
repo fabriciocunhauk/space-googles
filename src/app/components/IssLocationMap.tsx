@@ -76,28 +76,94 @@ function IssLocationMap({ futurePath = [] }: { futurePath?: PathPoint[] }) {
 
   const pathSegments = splitPathAtDateLine(polylinePath);
 
-  const { isLoaded } = useJsApiLoader({
+  const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: `${googleMapApiKey}`,
   });
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [showFallback, setShowFallback] = useState(false);
+  const [mapIsReady, setMapIsReady] = useState(false);
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!mapIsReady) setShowFallback(true);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [mapIsReady]);
+
+  // Auto-center on location update
+  useEffect(() => {
     if (map && location.latitude !== 0) {
-      map.panTo(center);
+      map.setCenter(center); // Use setCenter for immediate positioning on load
     }
-  }, [location, map]);
+  }, [location.latitude, location.longitude, map]);
 
   const handleMapLoad = useCallback((map: google.maps.Map) => {
     setMap(map);
+    setMapIsReady(true);
     map.setZoom(2);
     map.setMapTypeId("satellite");
-  }, []);
+    if (location.latitude !== 0) {
+      map.setCenter(center);
+    }
+  }, [location.latitude, location.longitude]);
 
   const handleMapUnmount = useCallback(() => {
     setMap(null);
   }, []);
+
+  if (loadError || showFallback) {
+    return (
+      <div className="relative w-full h-full bg-deep-space flex flex-col items-center justify-center p-12 text-center">
+        <div className="absolute inset-0 overflow-hidden opacity-20 pointer-events-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-white/10 rounded-full animate-ping-slow" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-white/10 rounded-full animate-pulse" />
+        </div>
+        
+        <div className="relative z-10 space-y-6">
+          <div className="w-32 h-32 mx-auto relative">
+             <div className="absolute inset-0 bg-nebula-blue/20 blur-2xl rounded-full animate-pulse" />
+             <img src={issIcon.src} alt="ISS" className="w-full h-full relative z-10 animate-bounce-slow" />
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-3xl font-Bellefair text-glow uppercase">Telemetry Mode Active</h3>
+            <p className="text-nebula-blue font-Barlow max-w-sm mx-auto text-sm">Visual map stream currently unavailable. Tracking ISS via direct orbital telemetry.</p>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4 pt-8">
+            <div className="glass p-4 rounded-2xl border border-white/5">
+              <span className="block text-[8px] uppercase tracking-widest text-nebula-blue mb-1">Status</span>
+              <span className="text-green-400 font-bold uppercase tracking-wider text-[10px] flex items-center justify-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                Linked
+              </span>
+            </div>
+            <div className="glass p-4 rounded-2xl border border-white/5">
+              <span className="block text-[8px] uppercase tracking-widest text-nebula-blue mb-1">Signal</span>
+              <span className="text-white font-Bellefair">98.4%</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Reusing the telemetry overlay for consistency */}
+        <div className="absolute bottom-6 left-6 right-6 flex flex-wrap gap-4 z-20 justify-center">
+          <div className="glass px-6 py-3 rounded-2xl flex flex-col">
+            <span className="text-[10px] text-nebula-blue uppercase tracking-widest font-Barlow-Condensed">Latitude</span>
+            <span className="text-xl font-Bellefair">{location.latitude.toFixed(4)}°</span>
+          </div>
+          <div className="glass px-6 py-3 rounded-2xl flex flex-col">
+            <span className="text-[10px] text-nebula-blue uppercase tracking-widest font-Barlow-Condensed">Longitude</span>
+            <span className="text-xl font-Bellefair">{location.longitude.toFixed(4)}°</span>
+          </div>
+          <div className="glass px-6 py-3 rounded-2xl flex flex-col border-l-4 border-accent-gold">
+            <span className="text-[10px] text-accent-gold uppercase tracking-widest font-Barlow-Condensed">Velocity</span>
+            <span className="text-xl font-Bellefair">{(location.velocity / 3600).toFixed(2)} km/s</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative w-full h-full group select-none">
@@ -111,6 +177,7 @@ function IssLocationMap({ futurePath = [] }: { futurePath?: PathPoint[] }) {
             styles: mapStyles,
             disableDefaultUI: true,
             zoomControl: true,
+            gestureHandling: "greedy" // Make it easier to move on touch
           }}
         >
           {/* Field of View Circle */}
@@ -118,45 +185,22 @@ function IssLocationMap({ futurePath = [] }: { futurePath?: PathPoint[] }) {
             center={center}
             radius={2200000} // ~2200km visibility radius
             options={{
-              strokeColor: "#FFFFFF",
-              strokeOpacity: 0.15,
-              strokeWeight: 1,
-              fillColor: "#FFFFFF",
-              fillOpacity: 0.05,
+              strokeColor: "#D0D6F9",
+              strokeOpacity: 0.6,
+              strokeWeight: 2,
+              fillColor: "#D0D6F9",
+              fillOpacity: 0.1,
               clickable: false,
-              draggable: false,
-              editable: false,
-              visible: true,
               zIndex: 1
             }}
           />
-
-          {/* Trajectory Line Segments */}
-          {pathSegments.map((segment, idx) => (
-            <Polyline
-              key={idx}
-              path={segment}
-              options={{
-                strokeColor: "#FFD700",
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                geodesic: true,
-                icons: [
-                  {
-                    icon: { path: "M 0,-1 0,1", strokeOpacity: 1, scale: 3 },
-                    offset: "0",
-                    repeat: "15px",
-                  },
-                ],
-              }}
-            />
-          ))}
 
           <Marker 
             position={center}
             icon={{
               url: issIcon.src,
               scaledSize: typeof window !== "undefined" && window.google ? new window.google.maps.Size(80, 80) : undefined,
+              anchor: typeof window !== "undefined" && window.google ? new window.google.maps.Point(40, 40) : undefined,
             }}
           />
         </GoogleMap>
