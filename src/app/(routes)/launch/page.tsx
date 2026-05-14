@@ -62,6 +62,8 @@ type LaunchData = {
   capsules: string[];
   payloads: string[];
   launchpad: Launchpad;
+  agency?: { name: string; type: string };
+  status?: { name: string; abbrev: string };
   flight_number: number;
   name: string;
   date_utc: string;
@@ -359,19 +361,15 @@ export default function Launch() {
                       )}
                     </div>
                     <div className="flex-grow min-w-0">
-                      <span className="text-[9px] font-Barlow-Condensed tracking-[2px] text-nebula-blue/50 uppercase block mb-0.5">
-                        FLIGHT #{launch.flight_number}
+                      <span className="text-[9px] font-Barlow-Condensed tracking-[2px] text-accent-gold uppercase block mb-0.5">
+                        {launch.agency?.name || "Global Mission"}
                       </span>
                       <h3 className="font-Bellefair text-base leading-tight truncate group-hover:text-white transition-colors">
                         {launch.name}
                       </h3>
                       <div className="flex items-center gap-1.5 mt-1 text-[10px] text-nebula-blue/40 font-Barlow">
-                        <FaCalendarAlt className="text-[8px]" />
-                        {new Date(launch.date_utc).toLocaleDateString(undefined, {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
+                        <FaMapMarkerAlt className="text-[8px]" />
+                        {launch.launchpad.full_name}
                       </div>
                     </div>
                     {selectedIndex === index && (
@@ -397,11 +395,21 @@ export default function Launch() {
                       videoId={selectedLaunch.links.youtube_id}
                     />
                   ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-white/5 to-transparent gap-4">
-                      <FaRocket className="text-4xl text-white/10" />
-                      <p className="text-nebula-blue/40 font-Barlow-Condensed tracking-widest uppercase text-xs">
-                        Webcast Pending
-                      </p>
+                    <div className="w-full h-full relative group">
+                      {selectedLaunch.links.patch.large && (
+                        <img 
+                          src={selectedLaunch.links.patch.large} 
+                          alt={selectedLaunch.name}
+                          className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-700"
+                        />
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
+                        <FaRocket className="text-5xl text-white/10 group-hover:scale-110 transition-transform duration-500" />
+                        <p className="text-nebula-blue/60 font-Barlow-Condensed tracking-[4px] uppercase text-[10px] bg-black/40 px-4 py-2 rounded-full border border-white/10 backdrop-blur-sm">
+                          Live Feed Offline · Mission Image Above
+                        </p>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -410,11 +418,11 @@ export default function Launch() {
                 <div className="glass rounded-[28px] p-6 md:p-8 space-y-7 border border-white/10">
                   {/* Title row */}
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 border-b border-white/8">
-                    <div className="space-y-1">
-                      <p className="text-[10px] text-accent-gold font-Barlow-Condensed tracking-[3px] uppercase">
-                        Mission Overview
+                    <div className="space-y-2">
+                      <p className="text-[10px] text-accent-gold font-Barlow-Condensed tracking-[3px] uppercase bg-accent-gold/10 px-3 py-1 rounded-full border border-accent-gold/20 inline-block">
+                        {selectedLaunch.agency?.name || "Global Mission"}
                       </p>
-                      <h2 className="text-3xl md:text-4xl font-Bellefair uppercase tracking-wide">
+                      <h2 className="text-3xl md:text-5xl font-Bellefair uppercase tracking-wide">
                         {selectedLaunch.name}
                       </h2>
                     </div>
