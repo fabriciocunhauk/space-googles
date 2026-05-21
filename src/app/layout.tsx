@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter, Bellefair, Barlow_Condensed } from "next/font/google";
 import { Navbar } from "./components/NavBar";
 import Footer from "./components/Footer";
@@ -37,6 +38,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7386584956005563"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+      </head>
       <body className={classNames(
         inter.className, 
         bellefair.variable, 
