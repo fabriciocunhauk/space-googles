@@ -289,7 +289,13 @@ export default function Launch() {
                       { label: "Vehicle", value: selectedLaunch.rocket.name, icon: <FaRocket className="text-nebula-blue/30" /> },
                       { label: "Date", value: new Date(selectedLaunch.date_utc).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }), icon: <FaCalendarAlt className="text-nebula-blue/30" /> },
                       { label: "Launch Pad", value: selectedLaunch.launchpad.name, icon: <FaMapMarkerAlt className="text-nebula-blue/30" /> },
-                      { label: "Status", value: selectedLaunch.upcoming ? "Upcoming" : "Complete", icon: <FaClock className="text-nebula-blue/30" />, highlight: !selectedLaunch.upcoming },
+                      { 
+                        label: "Status", 
+                        value: selectedLaunch.upcoming ? "Upcoming" : "Complete", 
+                        subtext: new Date(selectedLaunch.date_utc).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' }),
+                        icon: <FaClock className="text-nebula-blue/30" />, 
+                        highlight: !selectedLaunch.upcoming 
+                      },
                     ].map((stat, i) => (
                       <div key={i} className="glass rounded-2xl p-4 border border-white/5 space-y-2 group hover:border-white/15 transition-colors">
                         <div className="flex items-center gap-2 text-[9px] uppercase tracking-[2px] font-Barlow-Condensed text-nebula-blue/50">
@@ -299,6 +305,11 @@ export default function Launch() {
                         <p className={classNames("font-Bellefair text-lg uppercase", stat.highlight ? "text-accent-gold" : "text-white")}>
                           {stat.value}
                         </p>
+                        {stat.subtext && (
+                          <p className="text-[10px] text-white/50 tracking-wider font-Barlow-Condensed uppercase">
+                            {stat.subtext}
+                          </p>
+                        )}
                       </div>
                     ))}
                   </div>
