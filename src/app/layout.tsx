@@ -11,9 +11,23 @@ const bellefair = Bellefair({ subsets: ["latin"], weight: '400', variable: '--fo
 const barlowCondensed = Barlow_Condensed({ subsets: ["latin"], weight: ['300', '400', '700'], variable: '--font-barlow-condensed' });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://space-googles.co.uk"),
   title: "Space Googles | Interstellar Dashboard",
   description: "A premium dashboard for exploring launches, planets, and real-time space news.",
   keywords: ["space", "spacex", "nasa", "planets", "launches", "iss"],
+  openGraph: {
+    title: "Space Googles | Interstellar Dashboard",
+    description: "A premium dashboard for exploring launches, planets, and real-time space news.",
+    url: "https://space-googles.co.uk",
+    siteName: "Space Googles",
+    locale: "en_GB",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Space Googles | Interstellar Dashboard",
+    description: "A premium dashboard for exploring launches, planets, and real-time space news.",
+  },
 };
 
 export default function RootLayout({
