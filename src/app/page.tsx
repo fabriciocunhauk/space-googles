@@ -3,7 +3,7 @@ import { Button } from "./components/Button";
 import Container from "./components/Container";
 import { fetchMarsWeather } from "./api/fetchMarsWeather";
 import { fetchNumberOfPeopleInSpace } from "./api/fetchNumberOfPeopleInSpace";
-import { fetchLaunches } from "./api/fetchLaunches";
+import { fetchHomeLaunches } from "./api/fetchHomeLaunches";
 import { getIssLocation } from "./api/getIssLocation";
 import { fetchNews } from "./api/fetchNews";
 import { fetchNeoData } from "./api/fetchNeoData";
@@ -59,7 +59,7 @@ export default async function Home() {
     fetchImageOfTheDay(),
     fetchMarsWeather(),
     fetchNumberOfPeopleInSpace(),
-    fetchLaunches(),
+    fetchHomeLaunches(),
     getIssLocation(),
     fetchNews(),
     fetchNeoData(),
@@ -305,8 +305,13 @@ export default async function Home() {
                       </p>
                       <h4 className="text-xl font-Bellefair">{l.name}</h4>
                       <p className="text-[10px] text-white/30">
-                        {new Date(l.date_utc).toLocaleDateString()} •{" "}
-                        {l.launchpad.name}
+                        {new Date(l.date_utc).toLocaleString(undefined, { 
+                          month: 'short', 
+                          day: 'numeric', 
+                          hour: '2-digit', 
+                          minute: '2-digit',
+                          timeZoneName: 'short'
+                        })} • {l.launchpad.name}
                       </p>
                     </div>
                     <div className="h-10 w-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">

@@ -1,29 +1,30 @@
 import { fetchWithTimeout } from "../utils/fetchWithTimeout";
 
-type PeopleProps = {
-  number: number;
-  people: { craft: string; name: string }[];
-};
-
 export const fetchNumberOfPeopleInSpace = async () => {
   try {
     const response = await fetchWithTimeout(
-      // Note: open-notify does not reliably support HTTPS — use HTTP for server-side fetches
-      "http://api.open-notify.org/astros.json",
+      "https://ll.thespacedevs.com/2.2.0/astronaut/?in_space=true",
       {
         // Cache for 5 minutes — crew rotations happen infrequently
         next: { revalidate: 300 },
       } as RequestInit,
-      8000 // 8s timeout — open-notify can be slow
+      8000 // 8s timeout
     );
 
-    if (!response.ok) throw new Error(`astros.json responded ${response.status}`);
+    if (!response.ok) throw new Error(`LL2 Astronaut API responded ${response.status}`);
 
-    const data: PeopleProps = await response.json();
+    const data = await response.json();
+
+    const people = data.results.map((person: any) => ({
+      // We infer the craft based on the agency (CNSA = Tiangong, otherwise ISS)
+      // This is a reliable heuristic for current active space stations
+      craft: person.agency?.abbrev === "CNSA" ? "Tiangong" : "ISS",
+      name: person.name,
+    }));
 
     return {
-      numberOfPeopleInSpace: data.number,
-      people: data.people,
+      numberOfPeopleInSpace: data.count,
+      people,
     };
   } catch (error) {
     console.error("Error fetching people in space:", error);

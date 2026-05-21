@@ -204,9 +204,17 @@ export default function Launch() {
                       <h3 className="font-Bellefair text-base leading-tight truncate group-hover:text-white transition-colors">
                         {launch.name}
                       </h3>
-                      <div className="flex items-center gap-1.5 mt-1 text-[10px] text-nebula-blue/40 font-Barlow">
-                        <FaMapMarkerAlt className="text-[8px]" />
-                        {launch.launchpad.full_name}
+                      <div className="flex flex-col gap-1 mt-1 text-[10px] text-nebula-blue/40 font-Barlow">
+                        <div className="flex items-center gap-1.5">
+                          <FaClock className="text-[8px]" />
+                          {new Date(launch.date_utc).toLocaleString(undefined, { 
+                            month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                          })}
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <FaMapMarkerAlt className="text-[8px]" />
+                          {launch.launchpad.full_name}
+                        </div>
                       </div>
                     </div>
                     {selectedIndex === index && (
@@ -279,8 +287,8 @@ export default function Launch() {
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     {[
                       { label: "Vehicle", value: selectedLaunch.rocket.name, icon: <FaRocket className="text-nebula-blue/30" /> },
+                      { label: "Date", value: new Date(selectedLaunch.date_utc).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }), icon: <FaCalendarAlt className="text-nebula-blue/30" /> },
                       { label: "Launch Pad", value: selectedLaunch.launchpad.name, icon: <FaMapMarkerAlt className="text-nebula-blue/30" /> },
-                      { label: "Payloads", value: String(selectedLaunch.payloads.length || 1), icon: <FaCalendarAlt className="text-nebula-blue/30" /> },
                       { label: "Status", value: selectedLaunch.upcoming ? "Upcoming" : "Complete", icon: <FaClock className="text-nebula-blue/30" />, highlight: !selectedLaunch.upcoming },
                     ].map((stat, i) => (
                       <div key={i} className="glass rounded-2xl p-4 border border-white/5 space-y-2 group hover:border-white/15 transition-colors">

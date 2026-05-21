@@ -1,34 +1,34 @@
 import { fetchWithTimeout } from "../utils/fetchWithTimeout";
 
-const NASA_KEY = process.env.NEXT_PUBLIC_NASA_API_KEY || "DEMO_KEY";
-
 export const fetchSpaceWeather = async () => {
   try {
-    // Get flares from the last 7 days
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 7);
-    const startDateStr = startDate.toISOString().split("T")[0];
-
+    // Fetch flares from the last 7 days from NOAA SWPC
     const response = await fetchWithTimeout(
-      `https://api.nasa.gov/DONKI/FLR?startDate=${startDateStr}&api_key=${NASA_KEY}`,
+      "https://services.swpc.noaa.gov/json/goes/primary/xray-flares-7-day.json",
       {
         // Cache for 30 minutes — solar activity data updates infrequently
         next: { revalidate: 1800 },
       } as RequestInit
     );
 
-    if (!response.ok) throw new Error("NASA DONKI API error");
+    if (!response.ok) throw new Error("NOAA SWPC API error");
 
     const data = await response.json();
 
     if (data && data.length > 0) {
+      // Data is sorted chronologically, so the last item is the most recent
       const latest = data[data.length - 1];
       return {
         type: "Solar Flare",
-        class: latest.classType,
-        peak: new Date(latest.peakTime).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }),
+        class: latest.max_class,
+        peak: new Date(latest.max_time).toLocaleString([], {
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
         status: "Active Activity",
-        location: latest.sourceLocation,
+        location: "Global",
       };
     }
 
