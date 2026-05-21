@@ -9,17 +9,28 @@ export const fetchRockets = async () => {
     const response = await fetch("https://api.spacexdata.com/v4/rockets");
     const data = await response.json();
     
+    if (!Array.isArray(data)) {
+      console.error("fetchRockets: Expected array but received:", data);
+      return [];
+    }
+    
     // Filter and map to our UI format
-    return data.map((r: any) => ({
-      name: r.name,
-      description: r.description,
-      payload: `${r.payload_weights.find((w: any) => w.id === "leo")?.kg.toLocaleString() || "0"} kg to LEO`,
-      height: `${r.height.meters} m`,
-      thrust: `${r.first_stage.thrust_sea_level.kN.toLocaleString()} kN`,
-      image: r.flickr_images[0] || "/assets/launch/falcon9.png",
-      wikipedia: r.wikipedia,
-      active: r.active
-    }));
+    return data.map((r: any) => {
+      // Prioritize non-Imgur images as they are blocked in some regions (UK)
+      const validImages = (r.flickr_images || []).filter((img: string) => !img.includes("imgur.com"));
+      const selectedImage = validImages[0] || "/assets/launch/falcon9.png";
+
+      return {
+        name: r.name,
+        description: r.description,
+        payload: `${r.payload_weights.find((w: any) => w.id === "leo")?.kg.toLocaleString() || "0"} kg to LEO`,
+        height: `${r.height.meters} m`,
+        thrust: `${r.first_stage.thrust_sea_level.kN.toLocaleString()} kN`,
+        image: selectedImage,
+        wikipedia: r.wikipedia,
+        active: r.active
+      };
+    });
   } catch (error) {
     console.error("Error fetching rockets:", error);
     return [];

@@ -1,24 +1,45 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    images: {
+  // Enable gzip/brotli compression for all responses
+  compress: true,
+  // Remove the X-Powered-By: Next.js header (minor security + performance)
+  poweredByHeader: false,
+  images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "**",
+        hostname: "api.spacexdata.com",
       },
       {
-        protocol: "http",
-        hostname: "**",
-      }
+        protocol: "https",
+        hostname: "*.flickr.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.nasa.gov",
+      },
+      {
+        protocol: "https",
+        hostname: "*.staticflickr.com",
+      },
+      {
+        protocol: "https",
+        hostname: "epic.gsfc.nasa.gov",
+      },
+      {
+        protocol: "https",
+        hostname: "*.thespacedevs.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.spaceflightnewsapi.net",
+      },
+      {
+        protocol: "https",
+        hostname: "spaceflightnow.com",
+      },
     ],
-    domains: [
-      'spaceflightnow.com',
-      'mars.nasa.gov',
-      'www.nasa.gov',
-      'images-assets.nasa.gov',
-      'api.spaceflightnewsapi.net'
-    ]
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

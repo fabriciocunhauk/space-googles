@@ -5,6 +5,9 @@ import IssLife from "./components/IssLife";
 import IssTrackerSection from "./components/IssTrackerSection";
 import { FaUserAstronaut, FaSpaceShuttle } from "react-icons/fa";
 
+// ISR: revalidate every 5 minutes — open-notify API is slow, avoid fetching on every navigation
+export const revalidate = 300;
+
 export default async function Crew() {
   // Fast: single HTTP call, no heavy processing
   const { numberOfPeopleInSpace, people } = await fetchNumberOfPeopleInSpace();
@@ -21,7 +24,7 @@ export default async function Crew() {
         backgroundPosition: "center",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed",
+        // backgroundAttachment: "fixed" removed — causes scroll jank on mobile & Safari
       }}
       className="relative text-white min-h-screen pt-44 pb-20 overflow-hidden"
     >

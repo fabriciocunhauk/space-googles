@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Container from "@/app/components/Container";
 import background from "/public/assets/crew/background-crew-desktop.jpg";
-import Image from "next/image";
+import SafeImage from "@/app/components/SafeImage";
 import { fetchNews } from "@/app/api/fetchNews";
 import { classNames } from "@/app/utils/classNames";
 import { FaRegClock, FaExternalLinkAlt, FaStar } from "react-icons/fa";
@@ -47,7 +47,7 @@ export default function News() {
         backgroundPosition: "center",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed"
+        backgroundAttachment: "fixed",
       }}
       className="relative min-h-screen pt-44 pb-20 text-white overflow-hidden"
     >
@@ -81,7 +81,10 @@ export default function News() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="glass rounded-[32px] p-2 space-y-6 h-[450px] animate-pulse">
+                <div
+                  key={i}
+                  className="glass rounded-[32px] p-2 space-y-6 h-[450px] animate-pulse"
+                >
                   <div className="h-64 w-full bg-white/5 rounded-[24px]" />
                   <div className="p-4 space-y-4">
                     <div className="h-4 w-32 bg-white/5 rounded" />
@@ -100,11 +103,12 @@ export default function News() {
                 <div className="glass rounded-[40px] overflow-hidden border border-white/20 group cursor-pointer relative shadow-glow-sm hover:shadow-glow transition-all">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
                     <div className="relative h-96 lg:h-full min-h-[400px] overflow-hidden">
-                      <Image
+                      <SafeImage
                         src={featuredNews.image_url}
                         fill
                         className="object-cover group-hover:scale-110 transition-transform duration-1000"
                         alt={featuredNews.title}
+                        fallbackSrc="/assets/crew/background-crew-desktop.jpg"
                       />
                       <div className="absolute top-6 left-6 glass px-4 py-2 rounded-full flex items-center gap-2 text-xs font-bold tracking-[2px] uppercase">
                         <FaStar className="text-accent-gold" />
@@ -163,12 +167,13 @@ export default function News() {
                     className="glass-card group flex flex-col h-full hover:bg-white/5 transition-all duration-500 rounded-[32px] border border-white/5 hover:border-white/20 p-2"
                   >
                     <div className="relative h-64 w-full overflow-hidden rounded-[24px]">
-                      <Image
+                      <SafeImage
                         src={item.image_url}
                         className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
                         width={500}
                         height={300}
                         alt={item.title}
+                        fallbackSrc="/assets/crew/background-crew-desktop.jpg"
                       />
                       <div className="absolute top-4 left-4 glass px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase border border-white/10">
                         {item.news_site}

@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+import SafeImage from "@/app/components/SafeImage";
 import { useEffect, useState, useMemo } from "react";
 import background from "/public/assets/launch/background-technology-desktop.jpg";
 import Container from "@/app/components/Container";
@@ -92,7 +92,7 @@ export default function Launch() {
         backgroundPosition: "center",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed",
+        // backgroundAttachment: "fixed" removed — causes scroll jank on mobile & Safari
       }}
     >
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -185,12 +185,13 @@ export default function Launch() {
                   >
                     <div className="flex-shrink-0 w-11 h-11 rounded-xl overflow-hidden bg-white/5 flex items-center justify-center relative">
                       {launch.links.patch.small ? (
-                        <Image 
+                        <SafeImage 
                           src={launch.links.patch.small} 
                           alt={launch.name} 
                           width={44}
                           height={44}
                           className="w-full h-full object-contain" 
+                          fallbackSrc="/assets/launch/falcon9.png"
                         />
                       ) : (
                         <FaRocket className="text-white/20 text-lg" />
@@ -228,11 +229,12 @@ export default function Launch() {
                   ) : (
                     <div className="w-full h-full relative group">
                       {selectedLaunch.links.patch.large && (
-                        <Image 
+                        <SafeImage 
                           src={selectedLaunch.links.patch.large} 
                           alt={selectedLaunch.name} 
                           fill
                           className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-700" 
+                          fallbackSrc="/assets/launch/falcon9.png"
                         />
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />

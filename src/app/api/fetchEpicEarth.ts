@@ -1,17 +1,23 @@
+import { fetchWithTimeout } from "../utils/fetchWithTimeout";
+
 const NASA_KEY = process.env.NEXT_PUBLIC_NASA_API_KEY || "DEMO_KEY";
 
 /**
  * Fetches the latest natural color imagery of Earth from NASA's EPIC (Earth Polychromatic Imaging Camera).
- * 
- * @returns {Promise<{url: string, caption: string, date: string, coords: {lat: string, lon: string}} | null>} 
+ *
+ * @returns {Promise<{url: string, caption: string, date: string, coords: {lat: string, lon: string}} | null>}
  * The latest Earth image metadata or null if the request fails.
  */
 export const fetchEpicEarth = async () => {
   try {
-    const response = await fetch(
-      `https://epic.gsfc.nasa.gov/api/natural`
+    const response = await fetchWithTimeout(
+      `https://epic.gsfc.nasa.gov/api/natural`,
+      {
+        // Cache for 1 hour — EPIC captures ~22 images/day
+        next: { revalidate: 3600 },
+      } as RequestInit
     );
-    
+
     if (!response.ok) return null;
 
     const data = await response.json();
@@ -20,7 +26,7 @@ export const fetchEpicEarth = async () => {
       const latest = data[0];
       const date = latest.date.split(" ")[0].replace(/-/g, "/"); // YYYY/MM/DD
       const imageName = latest.image;
-      
+
       // Safety checks for coordinates
       const lat = latest.centroid_coordinates?.lat?.toFixed(2) || "0.00";
       const lon = latest.centroid_coordinates?.lon?.toFixed(2) || "0.00";
@@ -29,7 +35,7 @@ export const fetchEpicEarth = async () => {
         url: `https://epic.gsfc.nasa.gov/archive/natural/${date}/png/${imageName}.png`,
         caption: latest.caption || "Earth View",
         date: latest.date,
-        coords: { lat, lon }
+        coords: { lat, lon },
       };
     }
 
