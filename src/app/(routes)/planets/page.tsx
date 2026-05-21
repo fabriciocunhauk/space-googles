@@ -1,18 +1,38 @@
-"use client";
-import { useState } from "react";
 import backgroundDesktop from "/public/assets/planets/background-destination-desktop.jpg";
 import Container from "@/app/components/Container";
-import { usePlanet } from "./usePlanet";
 import PlanetVisual from "./components/PlanetVisual";
 import PlanetNav from "./components/PlanetNav";
 import PlanetInfo from "./components/PlanetInfo";
 import NasaGallery from "./components/NasaGallery";
 import HistoricalMissions from "./components/HistoricalMissions";
+import { fetchPlanetData } from "@/app/api/fetchPlanetData";
+import { fetchPlanetImages } from "@/app/api/fetchPlanetImages";
+import { FALLBACK_PLANET_DATA, PLANET_IMAGES, PlanetName } from "./constants";
 
-export default function Planets() {
-  const [planetName, setPlanetName] = useState("earth");
-  const { planetData, planetPhotos, loading, loadingPhotos, imageSrc } =
-    usePlanet(planetName);
+export default async function Planets({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const destination = typeof searchParams.destination === 'string' 
+    ? searchParams.destination.toLowerCase() 
+    : "earth";
+    
+  const planetName = (destination in PLANET_IMAGES ? destination : "earth") as PlanetName;
+
+  // Fetch data in parallel
+  const [dataResponse, planetPhotos] = await Promise.all([
+    fetchPlanetData(planetName),
+    fetchPlanetImages(planetName),
+  ]);
+
+  const planetData = (dataResponse.error 
+    ? FALLBACK_PLANET_DATA[planetName] 
+    : dataResponse) ?? null;
+
+  const imageSrc = planetName in PLANET_IMAGES
+    ? PLANET_IMAGES[planetName]
+    : (planetData?.picture ?? null);
 
   return (
     <section
@@ -38,21 +58,21 @@ export default function Planets() {
           <PlanetVisual
             src={imageSrc}
             alt={planetData?.name ?? planetName}
-            loading={loading}
+            loading={false}
           />
 
           <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-1000">
-            <PlanetNav selected={planetName} onSelect={setPlanetName} />
+            <PlanetNav selected={planetName} />
             <PlanetInfo 
               planetData={planetData} 
               planetName={planetName} 
-              loading={loading}
+              loading={false}
             />
           </div>
         </div>
 
         <HistoricalMissions planetName={planetName} />
-        <NasaGallery photos={planetPhotos} loading={loadingPhotos} />
+        <NasaGallery photos={planetPhotos} loading={false} />
       </Container>
     </section>
   );

@@ -25,7 +25,7 @@ import { AdUnit } from "./components/AdUnit";
 // ISR: revalidate this page every 5 minutes
 export const revalidate = 300;
 
-const NASA_KEY = process.env.NEXT_PUBLIC_NASA_API_KEY;
+const NASA_KEY = process.env.NASA_API_KEY;
 
 const fetchImageOfTheDay = async () => {
   try {

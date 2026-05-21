@@ -1,6 +1,6 @@
 import { fetchWithTimeout } from "../utils/fetchWithTimeout";
 
-const NASA_KEY = process.env.NEXT_PUBLIC_NASA_API_KEY || "DEMO_KEY";
+const NASA_KEY = process.env.NASA_API_KEY || "DEMO_KEY";
 
 /**
  * Fetches the latest natural color imagery of Earth from NASA's EPIC (Earth Polychromatic Imaging Camera).
