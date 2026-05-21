@@ -4,7 +4,7 @@ import { Inter, Bellefair, Barlow_Condensed } from "next/font/google";
 import { Navbar } from "./components/NavBar";
 import Footer from "./components/Footer";
 import { classNames } from "./utils/classNames";
-import { Analytics } from "@vercel/analytics/next";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
 const bellefair = Bellefair({ subsets: ["latin"], weight: '400', variable: '--font-bellefair' });
