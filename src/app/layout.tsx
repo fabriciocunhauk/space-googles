@@ -24,6 +24,9 @@ export const metadata: Metadata = {
     locale: "en_GB",
     type: "website",
   },
+  icons: {
+    icon: "/favicon.ico",
+  },
   twitter: {
     card: "summary_large_image",
     title: "Space Googles | Interstellar Dashboard",
