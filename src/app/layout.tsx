@@ -29,6 +29,9 @@ export const metadata: Metadata = {
     title: "Space Googles | Interstellar Dashboard",
     description: "A premium dashboard for exploring launches, planets, and real-time space news.",
   },
+  other: {
+    "google-adsense-account": "ca-pub-7386584956005563",
+  },
 };
 
 export default function RootLayout({
