@@ -20,6 +20,7 @@ import {
 } from "react-icons/fa";
 import { WiDaySunny, WiCloudy, WiStormShowers } from "react-icons/wi";
 import SafeImage from "@/app/components/SafeImage";
+import { AdUnit } from "./components/AdUnit";
 
 // ISR: revalidate this page every 5 minutes
 export const revalidate = 300;
@@ -148,6 +149,13 @@ export default async function Home() {
               </div>
             </div>
           </div>
+        </Container>
+      </section>
+
+      {/* AdSense Banner */}
+      <section className="bg-black py-4">
+        <Container>
+          <AdUnit slotId="6751816617" format="horizontal" />
         </Container>
       </section>
 
@@ -347,6 +355,11 @@ export default async function Home() {
                     </p>
                   </div>
                 ))}
+                
+                {/* Square Ad Unit */}
+                <div className="pt-4">
+                  <AdUnit slotId="7823252910" format="rectangle" />
+                </div>
               </div>
             </div>
           </div>

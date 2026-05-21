@@ -1,6 +1,7 @@
 import type { PlanetData } from "../types";
 import PlanetStatCard from "./PlanetStatCard";
 import PlanetTechSpecs from "./PlanetTechSpecs";
+import { AdUnit } from "@/app/components/AdUnit";
 
 type PlanetInfoProps = {
   planetData: PlanetData | null;
@@ -49,7 +50,11 @@ export default function PlanetInfo({
         )}
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-8 pt-8 border-t border-white/10">
+      <div className="my-8">
+        <AdUnit slotId="9298088908" format="fluid" layout="in-article" />
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-8 pt-4 border-t border-white/10">
         {STAT_CARDS.map(({ label, key, unit }) => (
           <PlanetStatCard
             key={label}

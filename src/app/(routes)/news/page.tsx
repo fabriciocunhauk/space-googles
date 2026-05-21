@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Container from "@/app/components/Container";
 import background from "/public/assets/crew/background-crew-desktop.jpg";
 import SafeImage from "@/app/components/SafeImage";
+import { AdUnit } from "@/app/components/AdUnit";
 import { fetchNews } from "@/app/api/fetchNews";
 import { classNames } from "@/app/utils/classNames";
 import { FaRegClock, FaExternalLinkAlt, FaStar } from "react-icons/fa";
@@ -135,14 +136,16 @@ export default function News() {
                           rel="noopener noreferrer"
                           className="bg-white text-black px-10 py-4 rounded-full font-Bellefair text-xl hover:scale-110 transition-all flex items-center gap-3"
                         >
-                          READ FULL STORY <FaExternalLinkAlt className="text-sm" />
+                          READ FULL STORY{" "}
+                          <FaExternalLinkAlt className="text-sm" />
                         </a>
                         <div className="flex items-center gap-2 text-nebula-blue/60 text-sm">
                           <FaRegClock />
-                          {new Date(featuredNews.published_at).toLocaleDateString(
-                            undefined,
-                            { dateStyle: "long" }
-                          )}
+                          {new Date(
+                            featuredNews.published_at,
+                          ).toLocaleDateString(undefined, {
+                            dateStyle: "long",
+                          })}
                         </div>
                       </div>
                     </div>
@@ -150,6 +153,11 @@ export default function News() {
                 </div>
               </div>
             )}
+
+            {/* Horizontal Ad Unit */}
+            <div className="py-2">
+              <AdUnit slotId="6751816617" format="horizontal" />
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
               {remainingNews.map((item, index) => {
@@ -159,56 +167,69 @@ export default function News() {
                     month: "long",
                     day: "numeric",
                     year: "numeric",
-                  }
+                  },
                 );
 
                 return (
-                  <div
-                    key={item.id}
-                    className="glass-card group flex flex-col h-full hover:bg-white/5 transition-all duration-500 rounded-[32px] border border-white/5 hover:border-white/20 p-2"
-                  >
-                    <div className="relative h-64 w-full overflow-hidden rounded-[24px]">
-                      <SafeImage
-                        src={item.image_url}
-                        unoptimized
-                        className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
-                        width={500}
-                        height={300}
-                        alt={item.title}
-                        fallbackSrc="/assets/crew/background-crew-desktop.jpg"
-                      />
-                      <div className="absolute top-4 left-4 glass px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase border border-white/10">
-                        {item.news_site}
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col flex-grow p-6 space-y-4">
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-[10px] text-nebula-blue/60 font-Barlow uppercase tracking-widest">
-                          <FaRegClock />
-                          {date}
+                  <div key={item.id} className="contents">
+                    <div className="glass-card group flex flex-col h-full hover:bg-white/5 transition-all duration-500 rounded-[32px] border border-white/5 hover:border-white/20 p-2">
+                      <div className="relative h-64 w-full overflow-hidden rounded-[24px]">
+                        <SafeImage
+                          src={item.image_url}
+                          unoptimized
+                          className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
+                          width={500}
+                          height={300}
+                          alt={item.title}
+                          fallbackSrc="/assets/crew/background-crew-desktop.jpg"
+                        />
+                        <div className="absolute top-4 left-4 glass px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase border border-white/10">
+                          {item.news_site}
                         </div>
-                        <h2 className="text-2xl font-Bellefair leading-tight group-hover:text-glow transition-all">
-                          {item.title}
-                        </h2>
                       </div>
 
-                      <p className="text-nebula-blue font-Barlow text-sm line-clamp-3 opacity-70">
-                        {item.summary}
-                      </p>
+                      <div className="flex flex-col flex-grow p-6 space-y-4">
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-[10px] text-nebula-blue/60 font-Barlow uppercase tracking-widest">
+                            <FaRegClock />
+                            {date}
+                          </div>
+                          <h2 className="text-2xl font-Bellefair leading-tight group-hover:text-glow transition-all">
+                            {item.title}
+                          </h2>
+                        </div>
 
-                      <div className="pt-4 mt-auto">
-                        <a
-                          href={item.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-3 text-white font-Barlow-Condensed tracking-[2px] uppercase text-xs hover:text-nebula-blue transition-all"
-                        >
-                          EXPLORE REPORT
-                          <FaExternalLinkAlt className="text-[10px]" />
-                        </a>
+                        <p className="text-nebula-blue font-Barlow text-sm line-clamp-3 opacity-70">
+                          {item.summary}
+                        </p>
+
+                        <div className="pt-4 mt-auto">
+                          <a
+                            href={item.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-3 text-white font-Barlow-Condensed tracking-[2px] uppercase text-xs hover:text-nebula-blue transition-all"
+                          >
+                            EXPLORE REPORT
+                            <FaExternalLinkAlt className="text-[10px]" />
+                          </a>
+                        </div>
                       </div>
                     </div>
+
+                    {/* Render a Square Ad natively inside the grid every 5 articles */}
+                    {(index + 1) % 5 === 0 && (
+                      <div className="glass-card flex flex-col h-full justify-center items-center rounded-[32px] border border-white/5 p-4 min-h-[400px]">
+                        <p className="text-[10px] text-white/30 uppercase tracking-widest mb-4 font-Barlow-Condensed">
+                          Sponsored Content
+                        </p>
+                        <AdUnit 
+                          slotId="8998706007" 
+                          format="fluid" 
+                          layoutKey="-54+d8+26-ke+ns" 
+                        />
+                      </div>
+                    )}
                   </div>
                 );
               })}
