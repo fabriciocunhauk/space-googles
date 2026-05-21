@@ -5,8 +5,8 @@ export const fetchPlanetImages = async (planetName: string) => {
     );
     const data = await response.json();
     
-    // Return the first 4 high-quality images
-    return data.collection.items.slice(0, 4).map((item: any) => ({
+    // Return the first 7 high-quality images
+    return data.collection.items.slice(0, 7).map((item: any) => ({
       href: item.links[0].href,
       title: item.data[0].title,
       description: item.data[0].description,

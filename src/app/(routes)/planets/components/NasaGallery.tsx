@@ -1,12 +1,13 @@
 import Image from "next/image";
 import type { NASAImage } from "../types";
+import { AdUnit } from "@/app/components/AdUnit";
 
 type NasaGalleryProps = {
   photos: NASAImage[];
   loading: boolean;
 };
 
-const SKELETON_COUNT = 4;
+const SKELETON_COUNT = 7;
 
 function GallerySkeleton() {
   return (
@@ -51,7 +52,21 @@ export default function NasaGallery({ photos, loading }: NasaGalleryProps) {
         {loading ? (
           <GallerySkeleton />
         ) : photos.length > 0 ? (
-          photos.map((photo, i) => <GalleryPhoto key={i} photo={photo} />)
+          <>
+            {photos.map((photo, i) => (
+              <GalleryPhoto key={i} photo={photo} />
+            ))}
+            <div className="glass-card group relative aspect-square overflow-hidden flex items-center justify-center">
+              <div className="absolute top-3 left-3 z-10 bg-black/60 backdrop-blur-sm px-2 py-1 rounded text-[10px] text-white/80 font-Barlow uppercase tracking-wider border border-white/10">
+                Sponsored
+              </div>
+              <AdUnit
+                slotId="1928374650"
+                format="rectangle"
+                responsive={true}
+              />
+            </div>
+          </>
         ) : (
           <p className="col-span-full text-center text-nebula-blue font-Barlow italic">
             No mission photography found in archives.
