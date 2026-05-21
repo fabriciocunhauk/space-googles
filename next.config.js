@@ -32,11 +32,32 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "thespacedevs-prod.nyc3.digitaloceanspaces.com",
+      },
+      {
+        protocol: "https",
         hostname: "*.spaceflightnewsapi.net",
       },
       {
         protocol: "https",
         hostname: "spaceflightnow.com",
+      },
+      // News article image CDNs (served by Spaceflight News API sources)
+      {
+        protocol: "https",
+        hostname: "*.wp.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.wordpress.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.imgix.net",
+      },
+      {
+        protocol: "https",
+        hostname: "*.cloudfront.net",
       },
     ],
   },

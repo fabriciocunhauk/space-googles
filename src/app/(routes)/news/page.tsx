@@ -106,6 +106,7 @@ export default function News() {
                       <SafeImage
                         src={featuredNews.image_url}
                         fill
+                        unoptimized
                         className="object-cover group-hover:scale-110 transition-transform duration-1000"
                         alt={featuredNews.title}
                         fallbackSrc="/assets/crew/background-crew-desktop.jpg"
@@ -169,6 +170,7 @@ export default function News() {
                     <div className="relative h-64 w-full overflow-hidden rounded-[24px]">
                       <SafeImage
                         src={item.image_url}
+                        unoptimized
                         className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
                         width={500}
                         height={300}
