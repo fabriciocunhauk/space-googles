@@ -1,7 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Inter, Bellefair, Barlow_Condensed } from "next/font/google";
+import { Inter, Bellefair, Barlow, Barlow_Condensed } from "next/font/google";
 import { Navbar } from "./components/NavBar";
 import Footer from "./components/Footer";
 import { classNames } from "./utils/classNames";
@@ -10,6 +10,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
 const bellefair = Bellefair({ subsets: ["latin"], weight: '400', variable: '--font-bellefair' });
+const barlow = Barlow({ subsets: ["latin"], weight: ['400', '500', '700'], variable: '--font-barlow' });
 const barlowCondensed = Barlow_Condensed({ subsets: ["latin"], weight: ['300', '400', '700'], variable: '--font-barlow-condensed' });
 
 export const metadata: Metadata = {
@@ -45,7 +46,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
+      <body className={classNames(
+        inter.className,
+        bellefair.variable,
+        barlow.variable,
+        barlowCondensed.variable,
+        "relative bg-black min-h-screen overflow-x-hidden"
+      )}>
+        <Navbar />
+        {children}
+        <Footer />
+        <Analytics />
+        <SpeedInsights />
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7386584956005563"
@@ -62,22 +74,9 @@ export default function RootLayout({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-
             gtag('config', 'G-GM5GS477PK');
           `}
         </Script>
-      </head>
-      <body className={classNames(
-        inter.className, 
-        bellefair.variable, 
-        barlowCondensed.variable,
-        "relative bg-black min-h-screen overflow-x-hidden"
-      )}>
-        <Navbar />
-        {children}
-        <Footer />
-        <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   );
