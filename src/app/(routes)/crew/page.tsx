@@ -1,9 +1,17 @@
+import { Metadata } from "next";
 import background from "/public/assets/crew/background-crew-desktop.jpg";
 import Container from "@/app/components/Container";
 import { fetchNumberOfPeopleInSpace } from "@/app/api/fetchNumberOfPeopleInSpace";
 import IssLife from "./components/IssLife";
 import IssTrackerSection from "./components/IssTrackerSection";
 import { FaUserAstronaut, FaSpaceShuttle } from "react-icons/fa";
+
+export const metadata: Metadata = {
+  title: "ISS Crew Tracker | Space Googles",
+  description:
+    "Track the current crew aboard the International Space Station in real time — names, spacecraft assignments, live ISS position map, and upcoming orbital passes.",
+  alternates: { canonical: "https://space-googles.co.uk/crew" },
+};
 
 // ISR: revalidate every 5 minutes — open-notify API is slow, avoid fetching on every navigation
 export const revalidate = 300;

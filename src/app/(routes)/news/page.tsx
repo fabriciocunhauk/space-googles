@@ -1,9 +1,15 @@
+import Link from "next/link";
 import Container from "@/app/components/Container";
 import background from "/public/assets/crew/background-crew-desktop.jpg";
 import SafeImage from "@/app/components/SafeImage";
 import { AdUnit } from "@/app/components/AdUnit";
 import { fetchNews } from "@/app/api/fetchNews";
-import { FaRegClock, FaExternalLinkAlt, FaStar } from "react-icons/fa";
+import { FaRegClock, FaArrowRight, FaStar } from "react-icons/fa";
+
+export const metadata = {
+  title: "Space News | Latest Headlines | Space Googles",
+  description: "The latest space news headlines curated from leading outlets — launches, discoveries, missions, and more.",
+};
 
 // Optional: Enable caching/ISR by setting a revalidation time
 export const revalidate = 600; // 10 minutes
@@ -77,15 +83,13 @@ export default async function News() {
                     </p>
                   </div>
                   <div className="flex items-center gap-6 pt-4">
-                    <a
-                      href={featuredNews.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <Link
+                      href={`/news/${featuredNews.id}`}
                       className="bg-white text-black px-10 py-4 rounded-full font-Bellefair text-xl hover:scale-110 transition-all flex items-center gap-3"
                     >
                       READ FULL STORY{" "}
-                      <FaExternalLinkAlt className="text-sm" />
-                    </a>
+                      <FaArrowRight className="text-sm" />
+                    </Link>
                     <div className="flex items-center gap-2 text-nebula-blue/60 text-sm">
                       <FaRegClock />
                       {new Date(
@@ -151,15 +155,13 @@ export default async function News() {
                     </p>
 
                     <div className="pt-4 mt-auto">
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <Link
+                        href={`/news/${item.id}`}
                         className="inline-flex items-center gap-3 text-white font-Barlow-Condensed tracking-[2px] uppercase text-xs hover:text-nebula-blue transition-all"
                       >
                         EXPLORE REPORT
-                        <FaExternalLinkAlt className="text-[10px]" />
-                      </a>
+                        <FaArrowRight className="text-[10px]" />
+                      </Link>
                     </div>
                   </div>
                 </div>

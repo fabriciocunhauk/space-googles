@@ -12,7 +12,7 @@ export default function PlanetNav({ selected }: PlanetNavProps) {
       {PLANET_LIST.map((name) => (
         <Link
           key={name}
-          href={`/planets?destination=${name}`}
+          href={`/planets/${name}`}
           className={classNames(
             "font-Barlow-Condensed tracking-[2.7px] uppercase transition-all duration-300 border-b-2 pb-2 -mb-[18px]",
             selected === name

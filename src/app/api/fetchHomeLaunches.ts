@@ -38,7 +38,12 @@ export const fetchHomeLaunches = async (): Promise<HomeLaunch[]> => {
       name: l.missions?.[0]?.name || l.name || "Unknown Mission",
       // RocketLaunch.Live returns ISO strings for t0 and win_open. If neither exists, date_str is something like "May 21".
       // We ensure we pass a valid date format.
-      date_utc: l.t0 || l.win_open || new Date(`${l.date_str} ${new Date().getFullYear()}`).toISOString(),
+      date_utc: (() => {
+        if (l.t0) return l.t0;
+        if (l.win_open) return l.win_open;
+        const d = new Date(`${l.date_str} ${new Date().getFullYear()}`);
+        return isNaN(d.getTime()) ? "" : d.toISOString();
+      })(),
       rocket: {
         name: l.vehicle?.name || "Unknown Vehicle",
       },
