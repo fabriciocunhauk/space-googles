@@ -32,5 +32,7 @@ export type LaunchData = {
     name: string;
     abbrev: string;
   };
-  payloads: any[];
+  missionType?: string | null;
+  orbit?: string | null;
+  payloads: { name: string }[];
 };

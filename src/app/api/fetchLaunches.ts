@@ -64,7 +64,11 @@ export const fetchLaunches = async (): Promise<LaunchData[]> => {
         name: l.status.name,
         abbrev: l.status.abbrev,
       },
-      payloads: l.mission?.payloads || [],
+      missionType: l.mission?.type || null,
+      orbit: l.mission?.orbit?.name || null,
+      payloads: (l.mission?.payloads || []).map((p: any) => ({
+        name: p.name || p.payload_name || "Unnamed Payload",
+      })),
     }));
   } catch (error) {
     // Graceful error handling for mission-critical telemetry

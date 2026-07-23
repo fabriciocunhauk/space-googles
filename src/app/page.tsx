@@ -27,7 +27,14 @@ export const revalidate = 300;
 
 const NASA_KEY = process.env.NEXT_PUBLIC_NASA_API_KEY;
 
-const fetchImageOfTheDay = async () => {
+type ApodData = {
+  url: string;
+  title: string | null;
+  explanation: string | null;
+  copyright: string | null;
+};
+
+const fetchImageOfTheDay = async (): Promise<ApodData> => {
   try {
     const response = await fetchWithTimeout(
       `https://api.nasa.gov/planetary/apod?api_key=${NASA_KEY}`,
@@ -38,16 +45,26 @@ const fetchImageOfTheDay = async () => {
     );
     if (!response.ok) throw new Error("APOD API error");
     const data = await response.json();
-    return data.url;
+    return {
+      url: data.url,
+      title: data.title ?? null,
+      explanation: data.explanation ?? null,
+      copyright: data.copyright ?? null,
+    };
   } catch (error) {
     console.error("Failed to fetch image of the day:", error);
-    return "/assets/home/background-home-desktop.jpg";
+    return {
+      url: "/assets/home/background-home-desktop.jpg",
+      title: null,
+      explanation: null,
+      copyright: null,
+    };
   }
 };
 
 export default async function Home() {
   const [
-    imageOfTheDay,
+    apod,
     marsWeather,
     peopleInSpace,
     launches,
@@ -74,7 +91,7 @@ export default async function Home() {
       <section
         className="relative min-h-screen flex items-center justify-center pt-20"
         style={{
-          backgroundImage: `linear-gradient(rgba(11, 13, 23, 0.6), rgba(11, 13, 23, 0.6)), url(${imageOfTheDay})`,
+          backgroundImage: `linear-gradient(rgba(11, 13, 23, 0.6), rgba(11, 13, 23, 0.6)), url(${apod.url})`,
           backgroundPosition: "center",
           backgroundSize: "cover",
           // backgroundAttachment: "fixed" removed — causes scroll jank on mobile & Safari
@@ -150,6 +167,35 @@ export default async function Home() {
             </div>
           </div>
         </Container>
+
+        {/* Astronomy Picture of the Day attribution */}
+        {apod.title && (
+          <div className="absolute bottom-6 left-0 right-0 z-10 px-6">
+            <Container>
+              <details className="group glass max-w-xl rounded-2xl border border-white/10 p-4 md:p-5 backdrop-blur-xl">
+                <summary className="cursor-pointer list-none flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-[9px] text-nebula-blue/70 uppercase tracking-[2px] font-Barlow-Condensed">
+                      NASA Astronomy Picture of the Day
+                    </p>
+                    <p className="text-sm font-Bellefair text-white">{apod.title}</p>
+                  </div>
+                  <span className="text-white/40 text-xs group-open:rotate-180 transition-transform">▾</span>
+                </summary>
+                {apod.explanation && (
+                  <p className="text-nebula-blue/70 font-Barlow text-xs leading-relaxed mt-3 line-clamp-6">
+                    {apod.explanation}
+                  </p>
+                )}
+                {apod.copyright && (
+                  <p className="text-white/30 text-[10px] font-Barlow mt-2">
+                    Image credit: {apod.copyright}
+                  </p>
+                )}
+              </details>
+            </Container>
+          </div>
+        )}
       </section>
 
       {/* AdSense Banner */}
@@ -206,6 +252,12 @@ export default async function Home() {
                     {(issLocation.velocity / 3600).toFixed(1)} km/s
                   </span>
                 </div>
+                <div className="flex justify-between">
+                  <span>Altitude:</span>{" "}
+                  <span className="text-white">
+                    {issLocation.altitude.toFixed(1)} km
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -257,6 +309,12 @@ export default async function Home() {
                   <span>Miss Dist:</span>{" "}
                   <span className="text-white">
                     {neoData.closest?.distance || "0"} km
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Largest:</span>{" "}
+                  <span className="text-white">
+                    {neoData.largest ? `${neoData.largest.diameter} m` : "N/A"}
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -326,14 +384,19 @@ export default async function Home() {
                       </p>
                       <h4 className="text-xl font-Bellefair">{l.name}</h4>
                       <p className="text-[10px] text-white/30">
-                        {new Date(l.date_utc).toLocaleString(undefined, { 
-                          month: 'short', 
-                          day: 'numeric', 
-                          hour: '2-digit', 
+                        {new Date(l.date_utc).toLocaleString(undefined, {
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
                           minute: '2-digit',
                           timeZoneName: 'short'
                         })} • {l.launchpad.name}
                       </p>
+                      {l.details && (
+                        <p className="text-[11px] text-white/40 font-Barlow leading-relaxed line-clamp-2 pt-1 max-w-sm">
+                          {l.details}
+                        </p>
+                      )}
                     </div>
                     <div className="h-10 w-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
                       <FaRocket className="text-xs" />
@@ -400,6 +463,11 @@ export default async function Home() {
                   this is how our planet looks right now from the L1 Lagrange
                   point. A lone marble in the vast dark of space.
                 </p>
+                {epicEarth.caption && epicEarth.caption !== "Earth View" && (
+                  <p className="text-white/40 font-Barlow text-sm italic max-w-xl border-l-2 border-white/10 pl-4">
+                    &ldquo;{epicEarth.caption}&rdquo;
+                  </p>
+                )}
                 <div className="grid grid-cols-2 gap-8 pt-4">
                   <div className="glass p-6 rounded-2xl border border-white/5">
                     <p className="text-[10px] text-nebula-blue uppercase tracking-widest mb-1">

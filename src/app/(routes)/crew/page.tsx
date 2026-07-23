@@ -2,9 +2,10 @@ import { Metadata } from "next";
 import background from "/public/assets/crew/background-crew-desktop.jpg";
 import Container from "@/app/components/Container";
 import { fetchNumberOfPeopleInSpace } from "@/app/api/fetchNumberOfPeopleInSpace";
+import { fetchDockingEvents } from "@/app/api/fetchDockingEvents";
 import IssLife from "./components/IssLife";
 import IssTrackerSection from "./components/IssTrackerSection";
-import { FaUserAstronaut, FaSpaceShuttle } from "react-icons/fa";
+import { FaUserAstronaut, FaSpaceShuttle, FaLink, FaSignOutAlt } from "react-icons/fa";
 
 export const metadata: Metadata = {
   title: "ISS Crew Tracker | Space Googles",
@@ -17,8 +18,10 @@ export const metadata: Metadata = {
 export const revalidate = 300;
 
 export default async function Crew() {
-  // Fast: single HTTP call, no heavy processing
-  const { numberOfPeopleInSpace, people } = await fetchNumberOfPeopleInSpace();
+  const [{ numberOfPeopleInSpace, people }, dockingEvents] = await Promise.all([
+    fetchNumberOfPeopleInSpace(),
+    fetchDockingEvents(),
+  ]);
 
   const craftStats = people.reduce((acc: Record<string, number>, person: any) => {
     acc[person.craft] = (acc[person.craft] || 0) + 1;
@@ -136,6 +139,53 @@ export default async function Crew() {
             </div>
           </div>
         </div>
+
+        {dockingEvents.length > 0 && (
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+            <header className="space-y-2">
+              <p className="text-nebula-blue/60 font-Barlow-Condensed tracking-[4px] uppercase text-xs">
+                03 Traffic Log
+              </p>
+              <h2 className="text-3xl md:text-4xl font-Bellefair text-glow uppercase tracking-wide">
+                Recent Docking Activity
+              </h2>
+              <p className="text-nebula-blue/60 font-Barlow text-sm max-w-2xl">
+                Every crewed and cargo spacecraft that has docked with the ISS or Tiangong,
+                most recent first — this is how astronauts, supplies and experiments actually
+                get to and from a station.
+              </p>
+            </header>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {dockingEvents.map((event) => (
+                <div
+                  key={event.id}
+                  className="glass p-5 rounded-2xl border border-white/5 hover:border-white/15 transition-all space-y-2"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-Barlow-Condensed tracking-[2px] text-nebula-blue/60 uppercase px-2 py-0.5 bg-white/5 rounded">
+                      {event.stationName || "Unknown Station"}
+                    </span>
+                    {event.departure ? (
+                      <FaSignOutAlt className="text-[10px] text-white/30" title="Departed" />
+                    ) : (
+                      <FaLink className="text-[10px] text-green-400" title="Currently docked" />
+                    )}
+                  </div>
+                  <p className="text-lg font-Bellefair">{event.spacecraftName}</p>
+                  <div className="text-[10px] text-white/40 font-Barlow space-y-0.5">
+                    {event.docking && (
+                      <p>Docked {new Date(event.docking).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}</p>
+                    )}
+                    {event.departure && (
+                      <p>Departed {new Date(event.departure).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <IssLife />
       </Container>

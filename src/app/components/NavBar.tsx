@@ -49,7 +49,7 @@ export const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <ul className="hidden lg:flex items-center gap-12 px-12 py-4 glass rounded-full border border-white/10 backdrop-blur-xl">
+          <ul className="hidden xl:flex items-center gap-8 2xl:gap-10 px-8 2xl:px-10 py-4 glass rounded-full border border-white/10 backdrop-blur-xl">
             {navigation.map(({ id, name, href }) => (
               <li
                 key={id}
@@ -83,7 +83,7 @@ export const Navbar = () => {
 
           {/* Mobile Menu Toggle */}
           <button
-            className="lg:hidden p-2 text-3xl text-white transition-colors hover:text-nebula-blue outline-none focus:outline-none ring-0"
+            className="xl:hidden p-2 text-3xl text-white transition-colors hover:text-nebula-blue outline-none focus:outline-none ring-0"
             onClick={handleMobileMenuToggle}
             aria-label="Open mobile menu"
           >
@@ -95,7 +95,7 @@ export const Navbar = () => {
       {/* Mobile Menu Overlay */}
       <div
         className={classNames(
-          "fixed inset-0 z-[60] glass backdrop-blur-2xl transition-all duration-500 lg:hidden",
+          "fixed inset-0 z-[60] glass backdrop-blur-2xl transition-all duration-500 xl:hidden",
           menuOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0",
         )}
       >

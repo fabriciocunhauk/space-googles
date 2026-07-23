@@ -3,7 +3,7 @@ import SafeImage from "@/app/components/SafeImage";
 import { useEffect, useState, useMemo } from "react";
 import VideoPlayer from "@/app/components/VideoPlayer";
 import { classNames } from "@/app/utils/classNames";
-import { FaClock, FaCalendarAlt, FaMapMarkerAlt, FaSatellite, FaRocket } from "react-icons/fa";
+import { FaClock, FaCalendarAlt, FaMapMarkerAlt, FaSatellite, FaRocket, FaGlobeAmericas } from "react-icons/fa";
 import { LaunchData } from "@/app/types/launch";
 
 // ─── Countdown ────────────────────────────────────────────────────────────────
@@ -229,11 +229,17 @@ export default function LaunchExplorer({ launches }: { launches: LaunchData[] })
                     { label: "Launch Pad", value: selectedLaunch.launchpad.name, icon: <FaMapMarkerAlt className="text-nebula-blue/30" /> },
                     {
                       label: "Status",
-                      value: selectedLaunch.upcoming ? "Upcoming" : "Complete",
+                      value: selectedLaunch.status?.name || (selectedLaunch.upcoming ? "Upcoming" : "Complete"),
                       subtext: new Date(selectedLaunch.date_utc).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", timeZoneName: "short" }),
                       icon: <FaClock className="text-nebula-blue/30" />,
                       highlight: !selectedLaunch.upcoming,
                     },
+                    ...(selectedLaunch.missionType
+                      ? [{ label: "Mission Type", value: selectedLaunch.missionType, icon: <FaSatellite className="text-nebula-blue/30" /> }]
+                      : []),
+                    ...(selectedLaunch.orbit
+                      ? [{ label: "Target Orbit", value: selectedLaunch.orbit, icon: <FaGlobeAmericas className="text-nebula-blue/30" /> }]
+                      : []),
                   ].map((stat, i) => (
                     <div key={i} className="glass rounded-2xl p-4 border border-white/5 space-y-2 group hover:border-white/15 transition-colors">
                       <div className="flex items-center gap-2 text-[9px] uppercase tracking-[2px] font-Barlow-Condensed text-nebula-blue/50">
@@ -251,6 +257,24 @@ export default function LaunchExplorer({ launches }: { launches: LaunchData[] })
                     </div>
                   ))}
                 </div>
+
+                {selectedLaunch.payloads.length > 0 && (
+                  <div className="pt-2 space-y-2">
+                    <p className="text-[9px] uppercase tracking-[2px] font-Barlow-Condensed text-nebula-blue/50">
+                      Payloads
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedLaunch.payloads.map((payload, i) => (
+                        <span
+                          key={i}
+                          className="text-[11px] px-3 py-1.5 bg-white/5 rounded-full border border-white/10 text-white/70 font-Barlow"
+                        >
+                          {payload.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           ) : null}

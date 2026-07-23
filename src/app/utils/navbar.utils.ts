@@ -24,4 +24,14 @@ export const navigation = [
     name: "NEWS",
     href: "/news",
   },
+  {
+    id: 5,
+    name: "AGENCIES",
+    href: "/agencies",
+  },
+  {
+    id: 6,
+    name: "STATIONS",
+    href: "/stations",
+  },
 ];
