@@ -6,6 +6,7 @@ import SafeImage from "@/app/components/SafeImage";
 import { AdUnit } from "@/app/components/AdUnit";
 import { fetchNews } from "@/app/api/fetchNews";
 import { fetchNewsById, NewsArticle } from "@/app/api/fetchNewsById";
+import { CATEGORY_BACKGROUND, classifyCategory } from "../categoryBackground";
 import { FaRegClock, FaExternalLinkAlt, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 export const revalidate = 3600;
@@ -34,26 +35,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-function getMissionContext(title: string, summary: string): { label: string; href: string } | null {
-  const text = `${title} ${summary}`.toLowerCase();
-  if (text.includes("iss") || text.includes("international space station") || text.includes("astronaut") || text.includes("crew")) {
-    return { label: "Track the ISS Crew Live", href: "/crew" };
-  }
-  if (text.includes("launch") || text.includes("rocket") || text.includes("falcon") || text.includes("starship") || text.includes("atlas") || text.includes("ariane")) {
-    return { label: "View Upcoming Launches", href: "/launch" };
-  }
-  if (text.includes("mars")) return { label: "Explore Mars", href: "/planets/mars" };
-  if (text.includes("moon") || text.includes("lunar")) return { label: "Explore the Moon", href: "/planets/moon" };
-  if (text.includes("jupiter")) return { label: "Explore Jupiter", href: "/planets/jupiter" };
-  if (text.includes("saturn")) return { label: "Explore Saturn", href: "/planets/saturn" };
-  if (text.includes("europa")) return { label: "Explore Europa", href: "/planets/europa" };
-  if (text.includes("titan")) return { label: "Explore Titan", href: "/planets/titan" };
-  if (text.includes("planet") || text.includes("solar system") || text.includes("orbit")) {
-    return { label: "Explore the Solar System", href: "/planets" };
-  }
-  return null;
-}
-
 export default async function ArticlePage({ params }: Props) {
   const [article, allArticles] = await Promise.all([
     fetchNewsById(params.id),
@@ -66,7 +47,8 @@ export default async function ArticlePage({ params }: Props) {
     .filter((a) => String(a.id) !== params.id)
     .slice(0, 3);
 
-  const missionContext = getMissionContext(article.title, article.summary);
+  const category = classifyCategory(article.title, article.summary);
+  const explainer = CATEGORY_BACKGROUND[category];
 
   const formattedDate = new Date(article.published_at).toLocaleDateString(undefined, {
     day: "numeric",
@@ -120,43 +102,46 @@ export default async function ArticlePage({ params }: Props) {
 
         {/* Article Body */}
         <div className="glass rounded-[32px] border border-white/10 p-8 md:p-12 space-y-6">
+          <p className="text-[10px] font-Barlow-Condensed tracking-[3px] uppercase text-nebula-blue/50">
+            Quick Summary
+          </p>
           <p className="text-nebula-blue/90 font-Barlow text-lg leading-relaxed">{article.summary}</p>
+
+          {/* Space Explainer — category background, honestly labeled as general context */}
+          <div className="border border-accent-gold/30 bg-accent-gold/5 rounded-[20px] p-6 space-y-4">
+            <p className="text-xs font-Barlow-Condensed tracking-[3px] uppercase text-accent-gold">
+              Space Explainer: {explainer.title}
+            </p>
+            {explainer.body.map((paragraph, i) => (
+              <p key={i} className="text-nebula-blue/80 font-Barlow text-sm leading-relaxed">
+                {paragraph}
+              </p>
+            ))}
+            <Link
+              href={explainer.cta.href}
+              className="inline-flex items-center gap-2 text-white font-Barlow-Condensed tracking-[2px] uppercase text-sm hover:text-accent-gold transition-colors pt-1"
+            >
+              {explainer.cta.label}
+              <FaArrowRight className="text-[10px]" />
+            </Link>
+          </div>
 
           {/* AdSense in-article */}
           <AdUnit slotId="9298088908" layout="in-article" format="fluid" />
 
-          {/* Mission Context */}
-          {missionContext && (
-            <div className="border border-accent-gold/30 bg-accent-gold/5 rounded-[20px] p-6 space-y-3">
-              <p className="text-xs font-Barlow-Condensed tracking-[3px] uppercase text-accent-gold">
-                Mission Context
-              </p>
-              <p className="text-nebula-blue/80 font-Barlow text-sm leading-relaxed">
-                This story is connected to data we track live on Space Googles. Dive deeper:
-              </p>
-              <Link
-                href={missionContext.href}
-                className="inline-flex items-center gap-2 text-white font-Barlow-Condensed tracking-[2px] uppercase text-sm hover:text-accent-gold transition-colors"
-              >
-                {missionContext.label}
-                <FaArrowRight className="text-[10px]" />
-              </Link>
-            </div>
-          )}
-
           {/* External Link */}
           <div className="pt-4 border-t border-white/10">
-            <p className="text-nebula-blue/50 font-Barlow text-xs mb-4 uppercase tracking-widest">
+            <p className="text-nebula-blue/50 font-Barlow text-xs mb-3 uppercase tracking-widest">
               Source: {article.news_site}
             </p>
             <a
               href={article.url}
               target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-white text-black px-8 py-4 rounded-full font-Bellefair text-lg hover:scale-105 transition-all"
+              rel="noopener noreferrer nofollow"
+              className="inline-flex items-center gap-2 text-nebula-blue/60 hover:text-white font-Barlow-Condensed tracking-[1px] text-sm transition-colors"
             >
-              Read Full Story at {article.news_site}
-              <FaExternalLinkAlt className="text-sm" />
+              Read full story at {article.news_site}
+              <FaExternalLinkAlt className="text-xs" />
             </a>
           </div>
         </div>

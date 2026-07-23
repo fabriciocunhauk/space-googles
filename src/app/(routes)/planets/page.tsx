@@ -3,28 +3,14 @@ import Link from "next/link";
 import Image from "next/image";
 import backgroundDesktop from "/public/assets/planets/background-destination-desktop.jpg";
 import Container from "@/app/components/Container";
-import { PLANET_LIST, PLANET_IMAGES, FALLBACK_PLANET_DATA, PlanetName } from "./constants";
+import { PLANET_LIST, PLANET_IMAGES } from "./constants";
+import { PLANET_CONTENT } from "./content";
 
 export const metadata: Metadata = {
   title: "Explore the Solar System | Space Googles",
   description:
     "Explore all 12 destinations in our solar system — from Mercury to Neptune, our Moon to Titan. Real NASA imagery, orbital data, and mission history for each world.",
   alternates: { canonical: "https://space-googles.co.uk/planets" },
-};
-
-const PLANET_TAGLINES: Record<PlanetName, string> = {
-  earth: "Our home planet",
-  mars: "The red frontier",
-  mercury: "Closest to the Sun",
-  venus: "The evening star",
-  saturn: "Lord of the rings",
-  uranus: "The ice giant",
-  jupiter: "King of planets",
-  neptune: "The farthest giant",
-  pluto: "The beloved dwarf planet",
-  moon: "Earth's natural satellite",
-  europa: "One of Jupiter's moons",
-  titan: "Saturn's largest moon",
 };
 
 export default function PlanetsIndex() {
@@ -59,8 +45,8 @@ export default function PlanetsIndex() {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 animate-in fade-in slide-in-from-bottom-8 duration-1000">
           {PLANET_LIST.map((name) => {
-            const tagline = PLANET_TAGLINES[name];
-            const displayName = FALLBACK_PLANET_DATA[name]?.name ?? (name.charAt(0).toUpperCase() + name.slice(1));
+            const tagline = PLANET_CONTENT[name].tagline;
+            const displayName = PLANET_CONTENT[name].name;
 
             return (
               <Link

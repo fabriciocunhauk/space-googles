@@ -44,6 +44,24 @@ export default async function Crew() {
 
       <Container classes={{ container: "flex flex-col gap-14 w-full relative z-10" }}>
 
+        <header className="max-w-3xl space-y-4 animate-in fade-in slide-in-from-top-4 duration-700">
+          <p className="text-nebula-blue/60 font-Barlow-Condensed tracking-[4px] uppercase text-xs">
+            01 Live Roster
+          </p>
+          <h1 className="text-4xl md:text-5xl font-Bellefair text-glow uppercase tracking-wide">
+            Who&apos;s in Orbit
+          </h1>
+          <p className="text-nebula-blue/70 font-Barlow text-base leading-relaxed">
+            The International Space Station has been continuously crewed since November 2000,
+            making it the longest-running human outpost beyond Earth. It orbits roughly 400km up
+            and circles the planet every 90 minutes, so the people listed below see a sunrise
+            about every 45 minutes. Crews typically rotate every 5-6 months, arriving and
+            departing on Soyuz or Crew Dragon spacecraft — the &quot;craft&quot; grouping in the
+            stats below reflects which vehicle each astronaut launched on, not which station
+            they&apos;re currently assigned to.
+          </p>
+        </header>
+
         {/* ── Stats Dashboard ───────────────────────────────── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 animate-in fade-in slide-in-from-top-4 duration-700">
           {/* Total personnel */}

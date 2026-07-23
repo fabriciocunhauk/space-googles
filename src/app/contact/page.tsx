@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import Container from "@/app/components/Container";
-import { FaGithub, FaSatellite } from "react-icons/fa";
+import { FaGithub, FaSatellite, FaEnvelope } from "react-icons/fa";
 
 export const revalidate = false;
 
@@ -35,12 +35,28 @@ export default function Contact() {
           </p>
         </header>
 
-        <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <a
+            href="mailto:fabriciocunhadeveloper@gmail.com"
+            className="glass-card rounded-[28px] border border-white/10 p-8 space-y-4 hover:border-white/20 hover:bg-white/5 transition-all group flex flex-col"
+          >
+            <div className="p-3.5 bg-accent-gold/10 rounded-2xl w-fit group-hover:bg-accent-gold/20 transition-colors">
+              <FaEnvelope className="text-2xl text-accent-gold" />
+            </div>
+            <h2 className="text-xl font-Bellefair uppercase">Email</h2>
+            <p className="text-nebula-blue/70 font-Barlow text-sm leading-relaxed">
+              For direct enquiries, privacy requests, or anything that doesn&apos;t fit a GitHub issue.
+            </p>
+            <p className="text-white font-Barlow-Condensed tracking-[1px] text-sm group-hover:text-accent-gold transition-colors">
+              fabriciocunhadeveloper@gmail.com ↗
+            </p>
+          </a>
+
           <a
             href="https://github.com/fabriciocunhauk"
             target="_blank"
             rel="noopener noreferrer"
-            className="glass-card rounded-[28px] border border-white/10 p-8 space-y-4 hover:border-white/20 hover:bg-white/5 transition-all group flex flex-col max-w-md"
+            className="glass-card rounded-[28px] border border-white/10 p-8 space-y-4 hover:border-white/20 hover:bg-white/5 transition-all group flex flex-col"
           >
             <div className="p-3.5 bg-nebula-blue/10 rounded-2xl w-fit group-hover:bg-nebula-blue/20 transition-colors">
               <FaGithub className="text-2xl text-nebula-blue" />

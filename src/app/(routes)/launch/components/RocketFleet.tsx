@@ -1,8 +1,5 @@
-"use client";
 import SafeImage from "@/app/components/SafeImage";
-import { useEffect, useState } from "react";
 import { FaWeight, FaArrowUp, FaExpandArrowsAlt } from "react-icons/fa";
-import { fetchRockets } from "@/app/api/fetchRockets";
 
 type RocketSpec = {
   name: string;
@@ -87,32 +84,7 @@ function RocketCard({ rocket }: { rocket: RocketSpec }) {
   );
 }
 
-export default function RocketFleet() {
-  const [rockets, setRockets] = useState<RocketSpec[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const getRockets = async () => {
-      const data = await fetchRockets();
-      setRockets(data);
-      setLoading(false);
-    };
-    getRockets();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-16">
-        {[...Array(3)].map((_, i) => (
-          <div
-            key={i}
-            className="h-96 glass animate-pulse rounded-[32px] border border-white/5"
-          />
-        ))}
-      </div>
-    );
-  }
-
+export default function RocketFleet({ rockets }: { rockets: RocketSpec[] }) {
   return (
     <div className="space-y-12 pt-16 border-t border-white/10">
       <div className="text-center space-y-4">

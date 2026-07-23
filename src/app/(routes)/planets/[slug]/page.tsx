@@ -5,11 +5,13 @@ import Container from "@/app/components/Container";
 import PlanetVisual from "../components/PlanetVisual";
 import PlanetNav from "../components/PlanetNav";
 import PlanetInfo from "../components/PlanetInfo";
+import PlanetOverview from "../components/PlanetOverview";
 import NasaGallery from "../components/NasaGallery";
 import HistoricalMissions from "../components/HistoricalMissions";
-import { fetchPlanetData } from "@/app/api/fetchPlanetData";
+import { AdUnit } from "@/app/components/AdUnit";
 import { fetchPlanetImages } from "@/app/api/fetchPlanetImages";
-import { FALLBACK_PLANET_DATA, PLANET_IMAGES, PLANET_LIST, PlanetName } from "../constants";
+import { PLANET_IMAGES, PLANET_LIST, PlanetName } from "../constants";
+import { PLANET_CONTENT } from "../content";
 
 type Props = { params: { slug: string } };
 
@@ -22,17 +24,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!(slug in PLANET_IMAGES)) return { title: "Planet Not Found | Space Googles" };
 
   const planetName = slug as PlanetName;
-  const fallback = FALLBACK_PLANET_DATA[planetName];
-  const displayName = fallback?.name ?? (slug.charAt(0).toUpperCase() + slug.slice(1));
+  const content = PLANET_CONTENT[planetName];
 
   return {
-    title: `${displayName} | Solar System Exploration | Space Googles`,
-    description: fallback?.description
-      ? fallback.description.slice(0, 155)
-      : `Explore ${displayName} — NASA imagery, orbital data, historical missions and real-time space news from Space Googles.`,
+    title: `${content.name} | Solar System Exploration | Space Googles`,
+    description: content.overview[0].slice(0, 155),
     alternates: { canonical: `https://space-googles.co.uk/planets/${slug}` },
     openGraph: {
-      title: `${displayName} | Space Googles`,
+      title: `${content.name} | Space Googles`,
       url: `https://space-googles.co.uk/planets/${slug}`,
       images: [{ url: `https://space-googles.co.uk${PLANET_IMAGES[planetName]}` }],
     },
@@ -45,17 +44,11 @@ export default async function PlanetPage({ params }: Props) {
   if (!(slug in PLANET_IMAGES)) notFound();
 
   const planetName = slug as PlanetName;
+  const content = PLANET_CONTENT[planetName];
 
-  const [dataResponse, planetPhotos] = await Promise.all([
-    fetchPlanetData(planetName),
-    fetchPlanetImages(planetName),
-  ]);
+  const planetPhotos = await fetchPlanetImages(planetName);
 
-  const planetData =
-    (dataResponse.error ? FALLBACK_PLANET_DATA[planetName] : dataResponse) ?? null;
-
-  const imageSrc =
-    planetName in PLANET_IMAGES ? PLANET_IMAGES[planetName] : (planetData?.picture ?? null);
+  const imageSrc = PLANET_IMAGES[planetName];
 
   return (
     <section
@@ -80,21 +73,24 @@ export default async function PlanetPage({ params }: Props) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <PlanetVisual
             src={imageSrc}
-            alt={planetData?.name ?? planetName}
+            alt={content.name}
             loading={false}
           />
 
           <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-1000">
             <PlanetNav selected={planetName} />
-            <PlanetInfo
-              planetData={planetData}
-              planetName={planetName}
-              loading={false}
-            />
+            <PlanetInfo planet={content} />
           </div>
         </div>
 
-        <HistoricalMissions planetName={planetName} />
+        <PlanetOverview planet={content} />
+
+        <AdUnit slotId="9298088908" format="fluid" layout="in-article" />
+
+        <HistoricalMissions
+          explorationHistory={content.explorationHistory}
+          missions={content.missions}
+        />
         <NasaGallery photos={planetPhotos} loading={false} />
       </Container>
     </section>

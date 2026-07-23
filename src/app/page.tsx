@@ -164,6 +164,19 @@ export default async function Home() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
         <Container>
+          <div className="max-w-3xl mb-12 space-y-3">
+            <p className="text-nebula-blue font-Barlow-Condensed tracking-[3px] uppercase text-sm">
+              Live Telemetry
+            </p>
+            <p className="text-nebula-blue/70 font-Barlow text-base leading-relaxed">
+              Each panel below pulls directly from a real space agency data feed rather than a
+              static snapshot. The ISS position updates from live orbital tracking, Mars weather
+              comes from historical readings gathered by NASA&apos;s InSight lander before it lost
+              power, the asteroid radar checks JPL&apos;s catalogue of Near-Earth Objects for the
+              closest current pass, and the solar monitor reports recent flare activity — the kind
+              of space weather that can disrupt satellites and radio communication on Earth.
+            </p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* ISS Tracker */}
             <div className="glass p-8 rounded-3xl border border-white/10 hover:border-white/30 transition-all group">

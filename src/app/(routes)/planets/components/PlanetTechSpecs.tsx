@@ -1,59 +1,11 @@
 import { FaDna, FaThermometerHalf, FaWeightHanging, FaWind } from "react-icons/fa";
+import type { PlanetContent } from "../content";
 
-const TECHNICAL_DATA: Record<string, any> = {
-  mercury: {
-    composition: "Rocky (Silicate/Metal)",
-    gravity: "3.7 m/s²",
-    temp: "430°C / -180°C",
-    atmosphere: "Thin (Oxygen, Sodium)"
-  },
-  venus: {
-    composition: "Rocky (Silicate/Metal)",
-    gravity: "8.87 m/s²",
-    temp: "464°C",
-    atmosphere: "Thick (CO2, Nitrogen)"
-  },
-  earth: {
-    composition: "Rocky (Silicate/Metal)",
-    gravity: "9.81 m/s²",
-    temp: "15°C",
-    atmosphere: "Nitrogen, Oxygen"
-  },
-  mars: {
-    composition: "Rocky (Silicate/Metal)",
-    gravity: "3.72 m/s²",
-    temp: "-65°C",
-    atmosphere: "Thin (CO2, Nitrogen)"
-  },
-  jupiter: {
-    composition: "Gas Giant (H, He)",
-    gravity: "24.79 m/s²",
-    temp: "-110°C",
-    atmosphere: "Hydrogen, Helium"
-  },
-  saturn: {
-    composition: "Gas Giant (H, He)",
-    gravity: "10.44 m/s²",
-    temp: "-140°C",
-    atmosphere: "Hydrogen, Helium"
-  },
-  uranus: {
-    composition: "Ice Giant (H, He, Methane)",
-    gravity: "8.69 m/s²",
-    temp: "-195°C",
-    atmosphere: "Hydrogen, Helium"
-  },
-  neptune: {
-    composition: "Ice Giant (H, He, Methane)",
-    gravity: "11.15 m/s²",
-    temp: "-201°C",
-    atmosphere: "Hydrogen, Helium"
-  }
+type PlanetTechSpecsProps = {
+  specs: PlanetContent["technicalSpecs"];
 };
 
-export default function PlanetTechSpecs({ planetName }: { planetName: string }) {
-  const specs = TECHNICAL_DATA[planetName.toLowerCase()] || TECHNICAL_DATA.earth;
-
+export default function PlanetTechSpecs({ specs }: PlanetTechSpecsProps) {
   const specItems = [
     { label: "Composition", value: specs.composition, icon: <FaDna /> },
     { label: "Surface Gravity", value: specs.gravity, icon: <FaWeightHanging /> },

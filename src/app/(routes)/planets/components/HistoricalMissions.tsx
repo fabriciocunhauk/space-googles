@@ -1,43 +1,12 @@
 import { FaHistory, FaRocket } from "react-icons/fa";
+import type { PlanetContent } from "../content";
 
-const MISSION_DATA: Record<string, any[]> = {
-  mercury: [
-    { name: "Mariner 10", year: "1973", description: "First mission to use gravity assist and visit Mercury." },
-    { name: "MESSENGER", year: "2004", description: "First spacecraft to orbit Mercury, mapping its entire surface." }
-  ],
-  venus: [
-    { name: "Venera 7", year: "1970", description: "First spacecraft to transmit data from the surface of another planet." },
-    { name: "Magellan", year: "1989", description: "Mapped 98% of the surface of Venus using radar." }
-  ],
-  earth: [
-    { name: "Apollo 11", year: "1969", description: "First crewed mission to land on the Moon." },
-    { name: "ISS", year: "1998", description: "Continuously inhabited laboratory in Earth's orbit." }
-  ],
-  mars: [
-    { name: "Viking 1", year: "1975", description: "First successful US landing on the Martian surface." },
-    { name: "Perseverance", year: "2020", description: "Currently searching for signs of ancient microbial life." }
-  ],
-  jupiter: [
-    { name: "Galileo", year: "1989", description: "First mission to orbit Jupiter and drop a probe into its atmosphere." },
-    { name: "Juno", year: "2011", description: "Studying Jupiter's gravity, magnetic field, and polar magnetosphere." }
-  ],
-  saturn: [
-    { name: "Voyager 1", year: "1977", description: "Captured high-resolution images of Saturn's rings." },
-    { name: "Cassini-Huygens", year: "1997", description: "Deep investigation of Saturn and landing on Titan." }
-  ],
-  uranus: [
-    { name: "Voyager 2", year: "1977", description: "Only spacecraft to ever visit Uranus (flyby in 1986)." }
-  ],
-  neptune: [
-    { name: "Voyager 2", year: "1977", description: "Only spacecraft to ever visit Neptune (flyby in 1989)." }
-  ]
+type HistoricalMissionsProps = {
+  explorationHistory: string;
+  missions: PlanetContent["missions"];
 };
 
-export default function HistoricalMissions({ planetName }: { planetName: string }) {
-  const missions = MISSION_DATA[planetName.toLowerCase()] || [];
-
-  if (missions.length === 0) return null;
-
+export default function HistoricalMissions({ explorationHistory, missions }: HistoricalMissionsProps) {
   return (
     <div className="mt-16 space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-1000">
       <header className="flex items-center gap-4">
@@ -49,6 +18,10 @@ export default function HistoricalMissions({ planetName }: { planetName: string 
           <p className="text-[10px] text-nebula-blue uppercase tracking-widest font-Barlow-Condensed opacity-60">Exploration Milestones</p>
         </div>
       </header>
+
+      <p className="text-nebula-blue/80 font-Barlow text-base leading-relaxed max-w-3xl">
+        {explorationHistory}
+      </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {missions.map((mission, i) => (
