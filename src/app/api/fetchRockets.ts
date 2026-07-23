@@ -1,12 +1,17 @@
+import { fetchWithTimeout } from "../utils/fetchWithTimeout";
+
 /**
  * Fetches dynamic technical specifications for SpaceX launch vehicles.
  * Normalizes rocket data including payload, height, thrust, and imagery.
- * 
+ *
  * @returns {Promise<any[]>} A list of dynamic rocket specifications.
  */
 export const fetchRockets = async () => {
   try {
-    const response = await fetch("https://api.spacexdata.com/v4/rockets");
+    const response = await fetchWithTimeout("https://api.spacexdata.com/v4/rockets", {}, 8000);
+
+    if (!response.ok) throw new Error(`SpaceX Rockets API responded ${response.status}`);
+
     const data = await response.json();
     
     if (!Array.isArray(data)) {
