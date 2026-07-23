@@ -7,7 +7,12 @@ import { AdUnit } from "@/app/components/AdUnit";
 import { fetchNews } from "@/app/api/fetchNews";
 import { fetchNewsById, NewsArticle } from "@/app/api/fetchNewsById";
 import { CATEGORY_BACKGROUND, classifyCategory } from "../categoryBackground";
-import { FaRegClock, FaExternalLinkAlt, FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import {
+  FaRegClock,
+  FaExternalLinkAlt,
+  FaArrowLeft,
+  FaArrowRight,
+} from "react-icons/fa";
 
 export const revalidate = 3600;
 
@@ -50,20 +55,23 @@ export default async function ArticlePage({ params }: Props) {
   const category = classifyCategory(article.title, article.summary);
   const explainer = CATEGORY_BACKGROUND[category];
 
-  const formattedDate = new Date(article.published_at).toLocaleDateString(undefined, {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  const formattedDate = new Date(article.published_at).toLocaleDateString(
+    undefined,
+    {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    },
+  );
 
   return (
-    <section className="relative min-h-screen bg-deep-space pt-32 pb-20 text-white overflow-hidden">
+    <section className="relative bg-deep-space text-white">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 left-1/4 w-[600px] h-[400px] bg-nebula-blue/5 blur-[120px] rounded-full" />
       </div>
 
       {/* Hero Image */}
-      <div className="relative w-full h-64 md:h-96 mb-0 overflow-hidden">
+      <div className="relative w-full h-64 md:h-[700px] mb-0 overflow-hidden">
         <SafeImage
           src={article.image_url}
           fill
@@ -75,8 +83,12 @@ export default async function ArticlePage({ params }: Props) {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-deep-space/50 to-deep-space" />
       </div>
 
-      <Container classes={{ container: "flex flex-col gap-10 relative z-10" }} size="md">
-
+      <Container
+        classes={{
+          container: "flex flex-col gap-10 relative mt-48 md:-mt-96 pb-28 z-10",
+        }}
+        size="md"
+      >
         {/* Back Link */}
         <Link
           href="/news"
@@ -97,7 +109,9 @@ export default async function ArticlePage({ params }: Props) {
               {formattedDate}
             </div>
           </div>
-          <h1 className="text-3xl md:text-5xl font-Bellefair leading-tight">{article.title}</h1>
+          <h1 className="text-3xl md:text-5xl font-Bellefair leading-tight">
+            {article.title}
+          </h1>
         </header>
 
         {/* Article Body */}
@@ -105,7 +119,9 @@ export default async function ArticlePage({ params }: Props) {
           <p className="text-[10px] font-Barlow-Condensed tracking-[3px] uppercase text-nebula-blue/50">
             Quick Summary
           </p>
-          <p className="text-nebula-blue/90 font-Barlow text-lg leading-relaxed">{article.summary}</p>
+          <p className="text-nebula-blue/90 font-Barlow text-lg leading-relaxed">
+            {article.summary}
+          </p>
 
           {/* Space Explainer — category background, honestly labeled as general context */}
           <div className="border border-accent-gold/30 bg-accent-gold/5 rounded-[20px] p-6 space-y-4">
@@ -113,7 +129,10 @@ export default async function ArticlePage({ params }: Props) {
               Space Explainer: {explainer.title}
             </p>
             {explainer.body.map((paragraph, i) => (
-              <p key={i} className="text-nebula-blue/80 font-Barlow text-sm leading-relaxed">
+              <p
+                key={i}
+                className="text-nebula-blue/80 font-Barlow text-sm leading-relaxed"
+              >
                 {paragraph}
               </p>
             ))}
@@ -149,7 +168,9 @@ export default async function ArticlePage({ params }: Props) {
         {/* Related Articles */}
         {related.length > 0 && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-Bellefair uppercase">More from the Feed</h2>
+            <h2 className="text-2xl font-Bellefair uppercase">
+              More from the Feed
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {related.map((item) => (
                 <Link
@@ -180,7 +201,6 @@ export default async function ArticlePage({ params }: Props) {
             </div>
           </div>
         )}
-
       </Container>
     </section>
   );
