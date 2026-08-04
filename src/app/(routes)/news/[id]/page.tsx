@@ -4,8 +4,9 @@ import { notFound } from "next/navigation";
 import Container from "@/app/components/Container";
 import SafeImage from "@/app/components/SafeImage";
 import { AdUnit } from "@/app/components/AdUnit";
-import { fetchNews } from "@/app/api/fetchNews";
-import { fetchNewsById, NewsArticle } from "@/app/api/fetchNewsById";
+import { fetchNews, NEWS_STATIC_POOL_LIMIT } from "@/app/api/fetchNews";
+import { NewsArticle } from "@/app/api/newsTypes";
+import { fetchLaunchById } from "@/app/api/fetchLaunchById";
 import { CATEGORY_BACKGROUND, classifyCategory } from "../categoryBackground";
 import {
   FaRegClock,
@@ -15,16 +16,24 @@ import {
 } from "react-icons/fa";
 
 export const revalidate = 3600;
+export const dynamicParams = false;
 
 type Props = { params: { id: string } };
 
+// Single pinned fetch (revalidate: false) shared by generateStaticParams,
+// generateMetadata and the page body, so all three always agree on exactly
+// the same 48-article set — no separate per-id fetch that could fail or
+// drift independently for an id the static params already committed to.
+const getArticlePool = (): Promise<NewsArticle[]> => fetchNews(NEWS_STATIC_POOL_LIMIT, false);
+
 export async function generateStaticParams() {
-  const articles: NewsArticle[] = await fetchNews();
+  const articles = await getArticlePool();
   return articles.map((a) => ({ id: String(a.id) }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const article = await fetchNewsById(params.id);
+  const articles = await getArticlePool();
+  const article = articles.find((a) => String(a.id) === params.id);
   if (!article) return { title: "Article Not Found | Space Googles" };
   return {
     title: `${article.title} | Space Googles`,
@@ -41,19 +50,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ArticlePage({ params }: Props) {
-  const [article, allArticles] = await Promise.all([
-    fetchNewsById(params.id),
-    fetchNews(),
-  ]);
+  const allArticles = await getArticlePool();
+  const article = allArticles.find((a) => String(a.id) === params.id);
 
   if (!article) notFound();
 
-  const related: NewsArticle[] = (allArticles as NewsArticle[])
+  const related: NewsArticle[] = allArticles
     .filter((a) => String(a.id) !== params.id)
     .slice(0, 3);
 
   const category = classifyCategory(article.title, article.summary);
   const explainer = CATEGORY_BACKGROUND[category];
+
+  const primaryLaunchId = article.launches?.[0]?.launch_id ?? null;
+  const relatedLaunch = primaryLaunchId ? await fetchLaunchById(primaryLaunchId) : null;
+
+  const summaryWordCount = article.summary.split(/\s+/).filter(Boolean).length;
+  const hasSubstantiveContent = Boolean(relatedLaunch) || summaryWordCount >= 40;
 
   const formattedDate = new Date(article.published_at).toLocaleDateString(
     undefined,
@@ -112,6 +125,11 @@ export default async function ArticlePage({ params }: Props) {
           <h1 className="text-3xl md:text-5xl font-Bellefair leading-tight">
             {article.title}
           </h1>
+          {article.authors?.length > 0 && (
+            <p className="text-nebula-blue/60 font-Barlow text-sm">
+              By {article.authors.map((a) => a.name).join(", ")}
+            </p>
+          )}
         </header>
 
         {/* Article Body */}
@@ -123,30 +141,79 @@ export default async function ArticlePage({ params }: Props) {
             {article.summary}
           </p>
 
-          {/* Space Explainer — category background, honestly labeled as general context */}
-          <div className="border border-accent-gold/30 bg-accent-gold/5 rounded-[20px] p-6 space-y-4">
-            <p className="text-xs font-Barlow-Condensed tracking-[3px] uppercase text-accent-gold">
-              Space Explainer: {explainer.title}
-            </p>
-            {explainer.body.map((paragraph, i) => (
-              <p
-                key={i}
-                className="text-nebula-blue/80 font-Barlow text-sm leading-relaxed"
-              >
-                {paragraph}
+          {/* Related Launch — real, article-specific data from Launch Library 2 */}
+          {relatedLaunch ? (
+            <div className="border border-accent-gold/30 bg-accent-gold/5 rounded-[20px] p-6 space-y-4">
+              <p className="text-xs font-Barlow-Condensed tracking-[3px] uppercase text-accent-gold">
+                Related Launch: {relatedLaunch.name}
               </p>
-            ))}
-            <Link
-              href={explainer.cta.href}
-              className="inline-flex items-center gap-2 text-white font-Barlow-Condensed tracking-[2px] uppercase text-sm hover:text-accent-gold transition-colors pt-1"
-            >
-              {explainer.cta.label}
-              <FaArrowRight className="text-[10px]" />
-            </Link>
-          </div>
+              <p className="text-nebula-blue/80 font-Barlow text-sm leading-relaxed">
+                {relatedLaunch.missionDescription ??
+                  "Mission details are being finalized by the launch provider."}
+              </p>
+              <dl className="grid grid-cols-2 gap-3 text-xs font-Barlow text-nebula-blue/70">
+                <div>
+                  <dt className="uppercase tracking-widest opacity-50">Rocket</dt>
+                  <dd>{relatedLaunch.rocket.name}</dd>
+                </div>
+                <div>
+                  <dt className="uppercase tracking-widest opacity-50">Pad</dt>
+                  <dd>
+                    {relatedLaunch.pad.name}
+                    {relatedLaunch.pad.location ? `, ${relatedLaunch.pad.location}` : ""}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="uppercase tracking-widest opacity-50">Status</dt>
+                  <dd>{relatedLaunch.status.name}</dd>
+                </div>
+                <div>
+                  <dt className="uppercase tracking-widest opacity-50">Date</dt>
+                  <dd>
+                    {new Date(relatedLaunch.net).toLocaleDateString(undefined, {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </dd>
+                </div>
+              </dl>
+              <Link
+                href="/launch"
+                className="inline-flex items-center gap-2 text-white font-Barlow-Condensed tracking-[2px] uppercase text-sm hover:text-accent-gold transition-colors pt-1"
+              >
+                View Launch Schedule
+                <FaArrowRight className="text-[10px]" />
+              </Link>
+            </div>
+          ) : (
+            /* Space Explainer — category background, honestly labeled as general context */
+            <div className="border border-accent-gold/30 bg-accent-gold/5 rounded-[20px] p-6 space-y-4">
+              <p className="text-xs font-Barlow-Condensed tracking-[3px] uppercase text-accent-gold">
+                Space Explainer: {explainer.title}
+              </p>
+              {explainer.body.map((paragraph, i) => (
+                <p
+                  key={i}
+                  className="text-nebula-blue/80 font-Barlow text-sm leading-relaxed"
+                >
+                  {paragraph}
+                </p>
+              ))}
+              <Link
+                href={explainer.cta.href}
+                className="inline-flex items-center gap-2 text-white font-Barlow-Condensed tracking-[2px] uppercase text-sm hover:text-accent-gold transition-colors pt-1"
+              >
+                {explainer.cta.label}
+                <FaArrowRight className="text-[10px]" />
+              </Link>
+            </div>
+          )}
 
-          {/* AdSense in-article */}
-          <AdUnit slotId="9298088908" layout="in-article" format="fluid" />
+          {/* AdSense in-article — skipped on the thinnest pages (no linked launch + very short summary) */}
+          {hasSubstantiveContent && (
+            <AdUnit slotId="9298088908" layout="in-article" format="fluid" />
+          )}
 
           {/* External Link */}
           <div className="pt-4 border-t border-white/10">

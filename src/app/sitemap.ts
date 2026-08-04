@@ -1,5 +1,5 @@
 import { MetadataRoute } from "next";
-import { fetchNews } from "./api/fetchNews";
+import { fetchNews, NEWS_STATIC_POOL_LIMIT } from "./api/fetchNews";
 import { PLANET_LIST } from "./(routes)/planets/constants";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -26,7 +26,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   let newsRoutes: MetadataRoute.Sitemap = [];
   try {
-    const articles = await fetchNews();
+    // revalidate: false pins this to the same build-time snapshot that
+    // news/[id]'s generateStaticParams used, so the sitemap can't drift
+    // ahead of the frozen (dynamicParams = false) static page set.
+    const articles = await fetchNews(NEWS_STATIC_POOL_LIMIT, false);
     newsRoutes = articles.map((a: { id: number; published_at: string }) => ({
       url: `${baseUrl}/news/${a.id}`,
       lastModified: new Date(a.published_at),
