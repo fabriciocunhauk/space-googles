@@ -5,8 +5,9 @@ import Container from "@/app/components/Container";
 import SafeImage from "@/app/components/SafeImage";
 import { AdUnit } from "@/app/components/AdUnit";
 import { fetchNews, NEWS_STATIC_POOL_LIMIT } from "@/app/api/fetchNews";
+import { fetchNewsById } from "@/app/api/fetchNewsById";
 import { NewsArticle } from "@/app/api/newsTypes";
-import { fetchLaunchById } from "@/app/api/fetchLaunchById";
+import { fetchLaunchById, LaunchDetail } from "@/app/api/fetchLaunchById";
 import { CATEGORY_BACKGROUND, classifyCategory } from "../categoryBackground";
 import {
   FaRegClock,
@@ -16,14 +17,13 @@ import {
 } from "react-icons/fa";
 
 export const revalidate = 3600;
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 type Props = { params: { id: string } };
 
 // Single pinned fetch (revalidate: false) shared by generateStaticParams,
 // generateMetadata and the page body, so all three always agree on exactly
-// the same 48-article set — no separate per-id fetch that could fail or
-// drift independently for an id the static params already committed to.
+// the same 48-article set for ids inside the pool.
 const getArticlePool = (): Promise<NewsArticle[]> => fetchNews(NEWS_STATIC_POOL_LIMIT, false);
 
 export async function generateStaticParams() {
@@ -31,10 +31,33 @@ export async function generateStaticParams() {
   return articles.map((a) => ({ id: String(a.id) }));
 }
 
+// Resolves an id against the pinned pool first, falling back to a live
+// per-id fetch for ids outside it — e.g. dynamicParams-generated pages, or
+// any id the build-time pool missed because the news API was unavailable
+// during that particular build. Also resolves the related-launch data and
+// the substantive-content signal shared by generateMetadata and the page.
+async function resolveArticle(id: string): Promise<{
+  article: NewsArticle;
+  relatedLaunch: LaunchDetail | null;
+  hasSubstantiveContent: boolean;
+} | null> {
+  const pool = await getArticlePool();
+  const article = pool.find((a) => String(a.id) === id) ?? (await fetchNewsById(id));
+  if (!article) return null;
+
+  const primaryLaunchId = article.launches?.[0]?.launch_id ?? null;
+  const relatedLaunch = primaryLaunchId ? await fetchLaunchById(primaryLaunchId) : null;
+
+  const summaryWordCount = article.summary.split(/\s+/).filter(Boolean).length;
+  const hasSubstantiveContent = Boolean(relatedLaunch) || summaryWordCount >= 40;
+
+  return { article, relatedLaunch, hasSubstantiveContent };
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const articles = await getArticlePool();
-  const article = articles.find((a) => String(a.id) === params.id);
-  if (!article) return { title: "Article Not Found | Space Googles" };
+  const resolved = await resolveArticle(params.id);
+  if (!resolved) return { title: "Article Not Found | Space Googles" };
+  const { article, hasSubstantiveContent } = resolved;
   return {
     title: `${article.title} | Space Googles`,
     description: article.summary,
@@ -46,27 +69,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "article",
       publishedTime: article.published_at,
     },
+    // Thin aggregator pages (no linked launch, short summary) are kept live
+    // for visitors but excluded from Google's index — see sitemap.ts for
+    // the matching exclusion.
+    robots: hasSubstantiveContent ? undefined : { index: false, follow: true },
   };
 }
 
 export default async function ArticlePage({ params }: Props) {
+  const resolved = await resolveArticle(params.id);
+  if (!resolved) notFound();
+  const { article, relatedLaunch, hasSubstantiveContent } = resolved;
+
   const allArticles = await getArticlePool();
-  const article = allArticles.find((a) => String(a.id) === params.id);
-
-  if (!article) notFound();
-
   const related: NewsArticle[] = allArticles
     .filter((a) => String(a.id) !== params.id)
     .slice(0, 3);
 
   const category = classifyCategory(article.title, article.summary);
   const explainer = CATEGORY_BACKGROUND[category];
-
-  const primaryLaunchId = article.launches?.[0]?.launch_id ?? null;
-  const relatedLaunch = primaryLaunchId ? await fetchLaunchById(primaryLaunchId) : null;
-
-  const summaryWordCount = article.summary.split(/\s+/).filter(Boolean).length;
-  const hasSubstantiveContent = Boolean(relatedLaunch) || summaryWordCount >= 40;
 
   const formattedDate = new Date(article.published_at).toLocaleDateString(
     undefined,

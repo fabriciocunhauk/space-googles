@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import { fetchNews, NEWS_STATIC_POOL_LIMIT } from "./api/fetchNews";
+import { NewsArticle } from "./api/newsTypes";
 import { PLANET_LIST } from "./(routes)/planets/constants";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -28,12 +29,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     // revalidate: false pins this to the same build-time snapshot that
     // news/[id]'s generateStaticParams used, so the sitemap can't drift
-    // ahead of the frozen (dynamicParams = false) static page set.
+    // ahead of that static pool.
     const articles = await fetchNews(NEWS_STATIC_POOL_LIMIT, false);
-    newsRoutes = articles.map((a: { id: number; published_at: string }) => ({
-      url: `${baseUrl}/news/${a.id}`,
-      lastModified: new Date(a.published_at),
-    }));
+    // Only submit articles that news/[id] itself indexes — a linked launch
+    // or a summary long enough to count as substantive (mirrors
+    // hasSubstantiveContent in news/[id]/page.tsx, which noindexes the
+    // rest). Checking launches.length here (not a resolved fetchLaunchById)
+    // avoids 48 extra API calls at sitemap-build time; a page this misses
+    // still just falls back to noindex, never the other way around.
+    newsRoutes = articles
+      .filter((a: NewsArticle) => {
+        const wordCount = a.summary.split(/\s+/).filter(Boolean).length;
+        return a.launches?.length > 0 || wordCount >= 40;
+      })
+      .map((a: NewsArticle) => ({
+        url: `${baseUrl}/news/${a.id}`,
+        lastModified: new Date(a.published_at),
+      }));
   } catch {
     // silently skip if news API is unavailable at build time
   }
